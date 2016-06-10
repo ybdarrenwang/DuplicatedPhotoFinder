@@ -1,6 +1,6 @@
 #!/usr/local/bin/python2.7
 
-import Tkinter
+import Tkinter, tkFileDialog
 from PIL import Image, ImageTk
 
 class Canvas(object):

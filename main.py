@@ -3,8 +3,9 @@
 import os,sys,re
 import numpy as np
 import cv2
-import Tkinter
+import Tkinter, Tkconstants, tkFileDialog
 from gui import Canvas
+Tkinter.wantobjects = 0
     
 def photoCrawler(path):
     prev_photo = None
@@ -32,9 +33,25 @@ def findDuplicatePair(root, canvas, crawler):
     except:
         return
 
+class Button(object):
+    def __init__(self, root, canvas):
+        self.bt = Tkinter.Button(root, text='Open folder', command=self.askdirectory)
+        self.bt.pack(side=Tkinter.BOTTOM)
+        self.options = {}
+        self.options['initialdir'] = 'C:\\'
+        self.options['mustexist'] = False
+        self.options['parent'] = root
+        self.options['title'] = 'This is a title'
+        self.root = root
+        self.canvas = canvas
+
+    def askdirectory(self):
+        path = re.escape(tkFileDialog.askdirectory(**self.options))
+        crawler = photoCrawler(path)
+        findDuplicatePair(self.root, self.canvas, crawler)
+
 if __name__=="__main__":
     root = Tkinter.Tk()
     canvas = Canvas(root)
-    crawler = photoCrawler("~/Dropbox/Camera\ Uploads/")
-    findDuplicatePair(root, canvas, crawler)
+    button = Button(root, canvas)
     root.mainloop()
