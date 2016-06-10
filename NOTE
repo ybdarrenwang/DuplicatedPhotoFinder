@@ -1,0 +1,21 @@
+Candidates
+==========
+
+Euclidean distance
+
+Normalized Cross Correlation
+
+Compare histogram
+    * OpenCV method: compareHist()
+    * Extension: use Mutual Information or Entropy for histogram comparison
+
+Others
+======
+
+Template matching
+    * usually used to find smaller image parts in a bigger one
+    * OpenCV method: matchTemplate()
+
+Structural Similarity Index (SSIM)
+    * Between original and disroted image
+    * Can be used to measure image quality
