@@ -2,7 +2,7 @@ import Tkinter, tkFileDialog
 import re
 import util
 
-def askdirectory(options, root, canvas):
+def askdirectory(options, root, frame):
     path = re.escape(tkFileDialog.askdirectory(**options))
-    crawler = util.photoCrawler(path)
-    util.findDuplicatePair(root, canvas, crawler)
+    crawler = util.duplicatePhotoCrawler(path)
+    util.findDuplicate(root, frame, crawler)

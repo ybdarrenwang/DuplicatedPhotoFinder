@@ -4,13 +4,50 @@ import cv2
 import Tkinter
 #Tkinter.wantobjects = 0
     
-def photoCrawler(path):
-    prev_photo = None
+def duplicatePhotoCrawler(path):
+    """
+    - iterate over all photos in path
+    - cache copies if found
+    - yield group of copies
+    """
+    copies = []
     for photo in os.popen("ls %s/*" % path).read().splitlines():
-        yield (prev_photo, photo)
-        prev_photo = photo
+        if copies:
+            prev_img = cv2.imread(copies[-1])
+            img = cv2.imread(photo)
+            if img.shape==prev_img.shape:
+                dist = cv2.norm(img, prev_img)/img.size
+                if dist<0.01:
+                    copies.append(photo)
+                else:
+                    if len(copies)>1:
+                        yield copies
+                    copies = [photo]
+            else:
+                if len(copies)>1:
+                    yield copies
+                copies = [photo]
+        else:
+            copies = [photo]
+    if len(copies)>1: # the last batch of copies
+        yield copies
+"""
+def findDuplicate(root, frame, crawler):
+    try:
+        copies = crawler.next()
+        canvases = []
+        for cp in copies:
+            print cp
+            canvas = Canvas(frame, 250, 250)
+            canvas.loadImages(cp)
+            #canvases.append(Canvas(frame, 250, 250))
+            #canvases[-1].loadImages(cp)
+        root.update_idletasks()
+        root.after(1000, findDuplicatePair, root, frame, crawler)
+    except:
+        return
 
-def findDuplicatePair(root, canvas, crawler):
+def findDuplicate(root, canvas, crawler):
     try:
         prev_photo, photo = crawler.next()
         findDuplicate = False
@@ -29,3 +66,4 @@ def findDuplicatePair(root, canvas, crawler):
             root.after(0, findDuplicatePair, root, canvas, crawler)
     except:
         return
+"""
