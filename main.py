@@ -1,10 +1,10 @@
 import Tkinter
 from gui import Canvas, Button
 
-Tkinter.wantobjects = 0
+#Tkinter.wantobjects = 0
 
 if __name__=="__main__":
     root = Tkinter.Tk()
     canvas = Canvas(root)
-    button = Button(root, canvas)
+    button = Button.loadFolder(root, canvas)
     root.mainloop()

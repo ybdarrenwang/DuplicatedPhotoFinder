@@ -2,7 +2,7 @@ import os
 import numpy as np
 import cv2
 import Tkinter
-Tkinter.wantobjects = 0
+#Tkinter.wantobjects = 0
     
 def photoCrawler(path):
     prev_photo = None

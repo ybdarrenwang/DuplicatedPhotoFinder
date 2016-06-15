@@ -1,7 +1,6 @@
-import re
-import Tkinter, Tkconstants, tkFileDialog
+import Tkinter, Tkconstants
 from PIL import Image, ImageTk
-from util import *
+import gui_methods
 
 class Canvas(object):
     def __init__(self, root):
@@ -29,18 +28,17 @@ class Canvas(object):
             self.canvas2.itemconfig(self.img[1], image = self.thumb[1])
 
 class Button(object):
-    def __init__(self, root, canvas):
-        self.bt = Tkinter.Button(root, text='Open folder', command=self.askdirectory)
-        self.bt.pack(side=Tkinter.BOTTOM)
-        self.options = {}
-        self.options['initialdir'] = 'C:\\'
-        self.options['mustexist'] = False
-        self.options['parent'] = root
-        self.options['title'] = 'This is a title'
-        self.root = root
-        self.canvas = canvas
+    def __init__(self, bt, options):
+        self.bt = bt
+        self.options = options
 
-    def askdirectory(self):
-        path = re.escape(tkFileDialog.askdirectory(**self.options))
-        crawler = photoCrawler(path)
-        findDuplicatePair(self.root, self.canvas, crawler)
+    @classmethod
+    def loadFolder(cls, root, canvas):
+        options = {}
+        options['initialdir'] = 'C:\\'
+        options['mustexist'] = False
+        options['parent'] = root
+        #options['title'] = 'This is a title'
+        bt = Tkinter.Button(root, text='Load folder', command=lambda:gui_methods.askdirectory(options, root, canvas))
+        bt.pack(side=Tkinter.BOTTOM)
+        return cls(bt, options)
