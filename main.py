@@ -1,22 +1,8 @@
-import Tkinter
-from gui import Button, Canvas
+import sys, Tkinter
+sys.path.insert(0, "./gui/")
+from button import Button
 
 #Tkinter.wantobjects = 0
-
-def findDuplicate(root, frame, crawler):
-    try:
-        copies = crawler.next()
-        canvases = []
-        for cp in copies:
-            print cp
-            canvas = Canvas(frame, 250, 250)
-            canvas.loadImages(cp)
-            #canvases.append(Canvas(frame, 250, 250))
-            #canvases[-1].loadImages(cp)
-        root.update_idletasks()
-        root.after(1000, findDuplicatePair, root, frame, crawler)
-    except:
-        return
 
 if __name__=="__main__":
     root = Tkinter.Tk()

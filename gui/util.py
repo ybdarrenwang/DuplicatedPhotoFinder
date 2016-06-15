@@ -1,7 +1,7 @@
 import os
 import numpy as np
 import cv2
-import Tkinter
+from canvas import Canvas
 #Tkinter.wantobjects = 0
     
 def duplicatePhotoCrawler(path):
@@ -31,7 +31,7 @@ def duplicatePhotoCrawler(path):
             copies = [photo]
     if len(copies)>1: # the last batch of copies
         yield copies
-"""
+
 def findDuplicate(root, frame, crawler):
     try:
         copies = crawler.next()
@@ -46,7 +46,7 @@ def findDuplicate(root, frame, crawler):
         root.after(1000, findDuplicatePair, root, frame, crawler)
     except:
         return
-
+"""
 def findDuplicate(root, canvas, crawler):
     try:
         prev_photo, photo = crawler.next()
