@@ -3,7 +3,6 @@ from PIL import Image, ImageTk
 
 class Canvas(object):
     def __init__(self, parent, w, h):
-        print "__init__"
         self.width = w
         self.height = h
         self.canvas = Tkinter.Canvas(parent, width=w, height=h)
@@ -12,7 +11,6 @@ class Canvas(object):
         self.thumb = [None]
 
     def loadImages(self, image):
-        print "load "+image
         tmp = Image.open(image).resize((self.width, self.height), Image.ANTIALIAS)
         self.thumb[0] = ImageTk.PhotoImage(tmp)
         if self.img[0]==None:
