@@ -3,10 +3,10 @@ from PIL import Image, ImageTk
 import gui_methods
 
 class Canvas(object):
-    def __init__(self, root):
-        self.canvas1 = Tkinter.Canvas(root, width=250, height=250)
+    def __init__(self, parent):
+        self.canvas1 = Tkinter.Canvas(parent, width=250, height=250)
         self.canvas1.pack(side=Tkinter.LEFT)
-        self.canvas2 = Tkinter.Canvas(root, width=250, height=250)
+        self.canvas2 = Tkinter.Canvas(parent, width=250, height=250)
         self.canvas2.pack(side=Tkinter.LEFT)
         self.img = [None, None]
         self.thumb = [None, None]
@@ -33,12 +33,12 @@ class Button(object):
         self.options = options
 
     @classmethod
-    def loadFolder(cls, root, canvas):
+    def loadFolder(cls, parent, canvas):
         options = {}
         options['initialdir'] = 'C:\\'
         options['mustexist'] = False
-        options['parent'] = root
+        options['parent'] = parent
         #options['title'] = 'This is a title'
-        bt = Tkinter.Button(root, text='Load folder', command=lambda:gui_methods.askdirectory(options, root, canvas))
+        bt = Tkinter.Button(parent, text='Load folder', command=lambda:gui_methods.askdirectory(options, parent, canvas))
         bt.pack(side=Tkinter.BOTTOM)
         return cls(bt, options)

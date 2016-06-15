@@ -5,6 +5,8 @@ from gui import Canvas, Button
 
 if __name__=="__main__":
     root = Tkinter.Tk()
-    canvas = Canvas(root)
+    frame = Tkinter.Frame(root, relief=Tkinter.RAISED, borderwidth=1)
+    frame.pack(fill=Tkinter.BOTH, expand=True)
+    canvas = Canvas(frame)
     button = Button.loadFolder(root, canvas)
     root.mainloop()
