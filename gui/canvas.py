@@ -17,3 +17,6 @@ class Canvas(object):
             self.img[0] = self.canvas.create_image(0, 0, image = self.thumb[0], anchor='nw')
         else:
             self.canvas.itemconfig(self.img[0], image = self.thumb[0])
+
+    def destroy(self):
+        self.canvas.destroy()

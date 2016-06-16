@@ -3,6 +3,7 @@ import numpy as np
 import cv2
 from canvas import Canvas
 #Tkinter.wantobjects = 0
+import time, gc
     
 def duplicatePhotoCrawler(path):
     """
@@ -31,36 +32,18 @@ def duplicatePhotoCrawler(path):
             copies = [photo]
     if len(copies)>1: # the last batch of copies
         yield copies
+    raise StopIteration
 
 def findDuplicate(root, frame, crawler):
-    try:
-        copies = crawler.next()
-        canvases = []
-        for idx,cp in enumerate(copies):
-            canvases.append(Canvas(frame, 250, 250))
-            canvases[-1].loadImages(cp)
-        root.update_idletasks()
-        root.after(1000, findDuplicatePair, root, frame, crawler)
-    except:
+    copies = crawler.next()
+    if not copies:
         return
-"""
-def findDuplicate(root, canvas, crawler):
-    try:
-        prev_photo, photo = crawler.next()
-        findDuplicate = False
-        if prev_photo:
-            prev_img = cv2.imread(prev_photo)
-            img = cv2.imread(photo)
-            if img.shape==prev_img.shape:
-                dist = cv2.norm(img, prev_img)/img.size
-                if dist<0.01:
-                    canvas.loadImages(prev_photo, photo)
-                    findDuplicate = True
-        if findDuplicate:
-            root.update_idletasks()
-            root.after(1000, findDuplicatePair, root, canvas, crawler)
-        else:
-            root.after(0, findDuplicatePair, root, canvas, crawler)
-    except:
-        return
-"""
+    canvases = []
+    for idx,cp in enumerate(copies):
+        canvases.append(Canvas(frame, 250, 250))
+        canvases[-1].loadImages(cp)
+    root.update_idletasks()
+    time.sleep(3)
+    for cv in canvases:
+        cv.destroy()
+    root.after(0, findDuplicate, root, frame, crawler)
