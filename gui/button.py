@@ -2,23 +2,18 @@ import re
 import Tkinter, Tkconstants
 import gui_methods
 
-class Button(object):
-    def __init__(self, bt):
-        self.bt = bt
-        self.cache = None
-
-    @classmethod
-    def loadFolder(cls, parent, frame):
+class OpenFolderButton(Tkinter.Button):
+    def __init__(self, parent, frame):
+        self.crawler = []
         options = {}
         options['initialdir'] = 'C:\\'
         options['mustexist'] = False
         options['parent'] = parent
-        bt = Tkinter.Button(parent, text='Load folder', command=lambda:gui_methods.askdirectory(bt, options, parent, frame))
-        bt.pack(side=Tkinter.BOTTOM)
-        return cls(bt)
+        Tkinter.Button.__init__(self, parent, text='Open folder', command=lambda:gui_methods.askdirectory(self.crawler, options, parent, frame))
+        self.pack(side=Tkinter.LEFT)
 
-    @classmethod
-    def nextBatch(cls, parent, frame, crawler):
-        bt = Tkinter.Button(parent, text='Next batch', command=lambda:gui_methods.getNextDuplicatedBatch(bt, parent, frame, crawler))
-        bt.pack(side=Tkinter.BOTTOM)
-        return cls(bt)
+class NextBatchButton(Tkinter.Button):
+    def __init__(self, parent, frame, bt):
+        self.cachedPics = []
+        Tkinter.Button.__init__(self, parent, text='Next batch', command=lambda:gui_methods.getNextDuplicatedBatch(parent, frame, bt, self.cachedPics))
+        self.pack(side=Tkinter.LEFT)

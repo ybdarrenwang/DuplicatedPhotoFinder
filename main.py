@@ -1,6 +1,6 @@
 import sys, Tkinter
 sys.path.insert(0, "./gui/")
-from button import Button
+from button import OpenFolderButton, NextBatchButton
 
 #Tkinter.wantobjects = 0
 
@@ -10,6 +10,6 @@ if __name__=="__main__":
     frame.pack(fill=Tkinter.BOTH, expand=True)
     #canvas = Canvas(frame)
     #button = Button.loadFolder(root, canvas)
-    button1 = Button.loadFolder(root, frame)
-    button2 = Button.nextBatch(root, frame, button1.cache)
+    button1 = OpenFolderButton(root, frame)
+    button2 = NextBatchButton(root, frame, button1)
     root.mainloop()
