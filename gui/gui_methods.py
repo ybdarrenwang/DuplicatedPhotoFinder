@@ -16,6 +16,8 @@ def getNextDuplicatedBatch(root, frame, bt, cache):
     if not copies:
         return
     for idx,cp in enumerate(copies):
-        cache.append(Canvas(frame, 250, 250))
-        cache[-1].loadImages(cp)
+        height, width, channel = cp["shape"]
+        ratio = max([height, width])/250.0
+        cache.append(Canvas(frame, int(width/ratio), int(height/ratio)))
+        cache[-1].loadImages(cp["path"])
     root.update_idletasks()
