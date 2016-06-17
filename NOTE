@@ -1,21 +1,34 @@
-Candidates
-==========
+To-do
+=====
+- Picture size
+- Scroll bar
+- Delete picture function
+- Rotate picture function
+- View original size picture function
+
+Image similarity candidates
+===========================
 
 Euclidean distance
+------------------
 
 Normalized Cross Correlation
+----------------------------
 
 Compare histogram
-    * OpenCV method: compareHist()
-    * Extension: use Mutual Information or Entropy for histogram comparison
+-----------------
+* OpenCV method: compareHist()
+* Extension: use Mutual Information or Entropy for histogram comparison
 
-Others
-======
+Other image similarities
+========================
 
 Template matching
-    * usually used to find smaller image parts in a bigger one
-    * OpenCV method: matchTemplate()
+-----------------
+* usually used to find smaller image parts in a bigger one
+* OpenCV method: matchTemplate()
 
 Structural Similarity Index (SSIM)
-    * Between original and disroted image
-    * Can be used to measure image quality
+----------------------------------
+* Between original and disroted image
+* Can be used to measure image quality
