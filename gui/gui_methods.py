@@ -1,4 +1,4 @@
-import Tkinter, tkFileDialog
+import Tkinter, tkFileDialog, tkMessageBox
 from canvas import Canvas
 import re
 import util
@@ -12,8 +12,11 @@ def getNextDuplicatedBatch(root, frame, bt, cache):
         for cv in cache:
             cv.destroy()
         del cache[:]
+    if len(bt.crawler)==0:
+        tkMessageBox.showinfo("Warning", "Please choose a folder.")
     copies = bt.crawler[-1].next()
     if not copies:
+        tkMessageBox.showinfo("Warning", "No more duplicated photos found.")
         return
     for idx,cp in enumerate(copies):
         height, width, channel = cp["shape"]
