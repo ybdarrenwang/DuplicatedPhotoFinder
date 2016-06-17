@@ -3,9 +3,9 @@ import Tkinter, Tkconstants
 import gui_methods
 
 class Button(object):
-    def __init__(self, bt, options):
+    def __init__(self, bt):
         self.bt = bt
-        self.options = options
+        self.cache = None
 
     @classmethod
     def loadFolder(cls, parent, frame):
@@ -13,7 +13,12 @@ class Button(object):
         options['initialdir'] = 'C:\\'
         options['mustexist'] = False
         options['parent'] = parent
-        #options['title'] = 'This is a title'
-        bt = Tkinter.Button(parent, text='Load folder', command=lambda:gui_methods.askdirectory(options, parent, frame))
+        bt = Tkinter.Button(parent, text='Load folder', command=lambda:gui_methods.askdirectory(bt, options, parent, frame))
         bt.pack(side=Tkinter.BOTTOM)
-        return cls(bt, options)
+        return cls(bt)
+
+    @classmethod
+    def nextBatch(cls, parent, frame, crawler):
+        bt = Tkinter.Button(parent, text='Next batch', command=lambda:gui_methods.getNextDuplicatedBatch(bt, parent, frame, crawler))
+        bt.pack(side=Tkinter.BOTTOM)
+        return cls(bt)

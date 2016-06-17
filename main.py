@@ -10,5 +10,6 @@ if __name__=="__main__":
     frame.pack(fill=Tkinter.BOTH, expand=True)
     #canvas = Canvas(frame)
     #button = Button.loadFolder(root, canvas)
-    button = Button.loadFolder(root, frame)
+    button1 = Button.loadFolder(root, frame)
+    button2 = Button.nextBatch(root, frame, button1.cache)
     root.mainloop()

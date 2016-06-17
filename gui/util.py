@@ -34,16 +34,19 @@ def duplicatePhotoCrawler(path):
         yield copies
     raise StopIteration
 
-def findDuplicate(root, frame, crawler):
+def findDuplicate(root, frame, crawler, cache):
+    if len(cache)>0:
+        for cv in cache:
+            cv.destroy()
     copies = crawler.next()
     if not copies:
         return
-    canvases = []
+    cache = []
     for idx,cp in enumerate(copies):
-        canvases.append(Canvas(frame, 250, 250))
-        canvases[-1].loadImages(cp)
+        cache.append(Canvas(frame, 250, 250))
+        cache[-1].loadImages(cp)
     root.update_idletasks()
     time.sleep(3)
-    for cv in canvases:
+    for cv in cache:
         cv.destroy()
-    root.after(0, findDuplicate, root, frame, crawler)
+    #root.after(0, findDuplicate, root, frame, crawler)
