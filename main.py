@@ -11,6 +11,7 @@ def AuxscrollFunction(event):
 # create root
 root = Tkinter.Tk()
 root.geometry("1000x300+100+100")
+root.minsize(width=800, height=300)
 root.title("Find Duplicated Photos")
 
 # create background for scroll bar
