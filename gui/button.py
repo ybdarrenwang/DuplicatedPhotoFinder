@@ -15,5 +15,5 @@ class OpenFolderButton(Tkinter.Button):
 class NextBatchButton(Tkinter.Button):
     def __init__(self, parent, frame, bt):
         self.cachedPics = []
-        Tkinter.Button.__init__(self, parent, text='Next batch', command=lambda:gui_methods.getNextDuplicatedBatch(parent, frame, bt, self.cachedPics))
+        Tkinter.Button.__init__(self, parent, text='Find duplicates', command=lambda:gui_methods.getNextDuplicatedBatch(parent, frame, bt, self.cachedPics))
         self.pack(side=Tkinter.LEFT)

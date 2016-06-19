@@ -1,6 +1,9 @@
 import os
 import numpy as np
 import cv2
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
 #Tkinter.wantobjects = 0
 
 def duplicatePhotoCrawler(path):

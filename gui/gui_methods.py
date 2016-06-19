@@ -17,13 +17,13 @@ def getNextDuplicatedBatch(root, frame, bt, cache):
     if len(bt.crawler)==0:
         tkMessageBox.showinfo("Warning", "Please choose a folder.")
         return
-    copies = bt.crawler[-1].next()
-    if not copies:
+    try:
+        copies = bt.crawler[-1].next()
+        for idx,cp in enumerate(copies):
+            height, width, channel = cp["shape"]
+            ratio = max([height, width])/250.0
+            cache.append(Canvas(frame, int(width/ratio), int(height/ratio)))
+            cache[-1].loadImages(cp["path"])
+        root.update_idletasks()
+    except StopIteration:
         tkMessageBox.showinfo("Warning", "No more duplicated photos found.")
-        return
-    for idx,cp in enumerate(copies):
-        height, width, channel = cp["shape"]
-        ratio = max([height, width])/250.0
-        cache.append(Canvas(frame, int(width/ratio), int(height/ratio)))
-        cache[-1].loadImages(cp["path"])
-    root.update_idletasks()
