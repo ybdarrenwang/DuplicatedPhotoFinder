@@ -2,11 +2,15 @@ import Tkinter, Tkconstants
 from PIL import Image, ImageTk
 
 class Canvas(object):
-    def __init__(self, parent, w, h):
+    def __init__(self, parent, w, h, isCentered=False):
         self.width = w
         self.height = h
         self.canvas = Tkinter.Canvas(parent, width=w, height=h)
-        self.canvas.pack(side=Tkinter.LEFT)
+        if isCentered:
+            self.canvas.pack()
+        else:
+            #self.canvas.bind("<Button-1>", callback)
+            self.canvas.pack(side=Tkinter.LEFT)
         self.img = [None]
         self.thumb = [None]
 
