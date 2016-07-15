@@ -9,7 +9,7 @@ def askdirectory(crawler, options, root, frame):
         del crawler[:]
         crawler.append(util.duplicatePhotoCrawler(path))
 
-def getNextDuplicatedBatch(root, frame, bt, cache):
+def getNextDuplicatedBatch(root, batch_photo_frame, selected_photo_frame, bt, cache):
     if cache:
         for cv in cache:
             cv.destroy()
@@ -21,8 +21,8 @@ def getNextDuplicatedBatch(root, frame, bt, cache):
         copies = bt.crawler[-1].next()
         for idx,cp in enumerate(copies):
             height, width, channel = cp["shape"]
-            ratio = max([height, width])/250.0
-            cache.append(Canvas(frame, int(width/ratio), int(height/ratio)))
+            ratio = max([height, width])/100.0
+            cache.append(Canvas(batch_photo_frame, int(width/ratio), int(height/ratio)))
             cache[-1].loadImages(cp["path"])
         root.update_idletasks()
     except StopIteration:
