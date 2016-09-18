@@ -18,7 +18,7 @@ def duplicatePhotoCrawler(path):
             if copies:
                 if img.shape==copies[-1]["shape"]:
                     prev_img = cv2.imread(copies[-1]["path"])
-                    dist = cv2.norm(img, prev_img)/img.size
+                    dist = cv2.norm(img, prev_img)/img.size # average absolute difference
                     if dist<0.007:
                         copies.append({"path":photo, "shape":img.shape})
                         continue
