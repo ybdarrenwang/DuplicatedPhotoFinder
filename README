@@ -1,0 +1,6 @@
+http://www.pyimagesearch.com/2015/06/22/install-opencv-3-0-and-python-2-7-on-ubuntu/
+sudo apt-get install python-imaging-tk
+
+http://www.pyimagesearch.com/2015/06/15/install-opencv-3-0-and-python-2-7-on-osx/
+sudo easy_install pip
+sudo pip install pillow
