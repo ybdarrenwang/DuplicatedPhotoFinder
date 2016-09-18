@@ -1,8 +1,7 @@
 import sys, Tkinter
 sys.path.insert(0, "./gui/")
 from button import OpenFolderButton, NextBatchButton
-
-THUMB_HEIGHT = 80
+from config import *
 
 # Note: need to set size for bg_canvas here; otherwise it will grow disregard the size set while created!
 def AuxscrollFunction(event):
@@ -10,12 +9,12 @@ def AuxscrollFunction(event):
 
 # create root
 root = Tkinter.Tk()
-root.geometry("800x600+100+100")
-root.minsize(width=800, height=600)
+root.geometry(str(WINDOW_WIDTH)+"x"+str(WINDOW_HEIGHT)+"+100+100")
+root.minsize(width=WINDOW_WIDTH, height=WINDOW_HEIGHT)
 root.title("Find Duplicated Photos")
 
 # create frame for selected photo display
-selected_photo_frame = Tkinter.Frame(root, height=400)
+selected_photo_frame = Tkinter.Frame(root, height=DISPLAY_HEIGHT)
 selected_photo_frame.pack(fill=Tkinter.BOTH, expand=True)
 
 # create background for scroll bar
