@@ -1,5 +1,4 @@
-import re
-import Tkinter, Tkconstants, tkFont
+import Tkinter, tkFont
 import gui_methods
 
 class OpenFolderButton(Tkinter.Button):

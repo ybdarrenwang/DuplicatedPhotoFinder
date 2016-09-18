@@ -1,4 +1,4 @@
-import Tkinter, tkFileDialog, tkMessageBox
+import tkFileDialog, tkMessageBox
 from canvas import Canvas
 import re
 import util
