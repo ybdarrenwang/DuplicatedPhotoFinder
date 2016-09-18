@@ -23,4 +23,4 @@ class Canvas(Tkinter.Canvas):
         if self.img[0]==None:
             self.img[0] = self.create_image(0, 0, image = self.thumb[0], anchor='nw')
         else:
-            itemconfig(self.img[0], image = self.thumb[0])
+            self.itemconfig(self.img[0], image = self.thumb[0])
