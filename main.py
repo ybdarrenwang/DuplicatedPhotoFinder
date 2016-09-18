@@ -35,5 +35,5 @@ batch_photo_frame.bind("<Configure>", AuxscrollFunction)
 
 # create buttons
 button1 = OpenFolderButton(root, batch_photo_frame)
-button2 = NextBatchButton(root, batch_photo_frame, selected_photo_frame, button1)
+button2 = NextBatchButton(root, batch_photo_frame, selected_photo_frame, button1.photo_crawler)
 root.mainloop()
