@@ -13,7 +13,7 @@ root.minsize(width=800, height=600)
 root.title("Find Duplicated Photos")
 
 # create frame for selected photo display
-selected_photo_frame = Tkinter.Frame(root, height=450)
+selected_photo_frame = Tkinter.Frame(root, height=400)
 selected_photo_frame.pack(fill=Tkinter.BOTH, expand=True)
 
 # create background for scroll bar
