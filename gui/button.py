@@ -57,6 +57,11 @@ class NextBatchButton(Tkinter.Button):
             # show duplicated photo thumbs in batch_photo_frame
             for idx,cp in enumerate(copies):
                 cached_cv.append(PhotoCanvas(cp, batch_photo_frame, THUMB_HEIGHT, cached_cv[0]))
+            # copy pointers of all thumbs to each of them, so they can remove others' highlights when needed
+            for cv in cached_cv[1:]:
+                cv.setCompetingCanvases(cached_cv[1:])
+            # highlight the first picture
+            cached_cv[1].highlight()
             root.update_idletasks()
         except StopIteration:
             tkMessageBox.showinfo("Warning", "No more duplicated photos found.")
