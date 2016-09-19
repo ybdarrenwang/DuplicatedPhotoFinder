@@ -1,5 +1,8 @@
 Duplicated Photo Finder
 =======================
+This application is for finding and removing (not yet implemented) duplicated photos. Note it is assumed that the file name of the photos follows chronological order, and this application only checks if adjacent photos are duplicates.
+
+Right now I only use the average of absolute difference as the similarity measure of two images.
 
 Platforms tested
 ----------------
@@ -12,17 +15,21 @@ Prerequisites
     - [Install on OSX](http://www.pyimagesearch.com/2015/06/15/install-opencv-3-0-and-python-2-7-on-osx/)
 - Python Image Library
     - Install on Linux(Ubuntu): `sudo apt-get install python-imaging-tk`
-    - Install on OSX: `sudo easy_install pip;sudo pip install pillow`
+    - Install on OS X: `sudo easy_install pip;sudo pip install pillow`
 
-To-do
------
-- Delete picture function
-- Rotate picture function
+Execution
+---------
+Run `python main.py` under command line environment.
+
+Wish list
+---------
+- "Delete picture" function
+- "Rotate picture" function
 - Implement other image similarity metrics
     - Euclidean distance
     - Normalized Cross Correlation
     - Compare histogram
         - OpenCV method: compareHist()
         - Extension: use Mutual Information or Entropy for histogram comparison
-- Measure image quality between original and disroted image?
+- Measure image quality between original and disroted image
     - Structural Similarity Index (SSIM)
