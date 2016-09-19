@@ -1,8 +1,7 @@
-import Tkinter, tkFont
-import tkFileDialog, tkMessageBox
-from canvas import Canvas
-from config import *
 import re
+import Tkinter, tkFont, tkFileDialog, tkMessageBox
+from canvas import PhotoCanvas
+from config import *
 import util
 
 class OpenFolderButton(Tkinter.Button):
@@ -38,6 +37,9 @@ class NextBatchButton(Tkinter.Button):
     @staticmethod
     def getNextDuplicatedBatch(root, batch_photo_frame, selected_photo_frame, photo_crawler, cached_cv):
         """
+        batch_photo_frame: to display the thumbs of all duplicated photos
+        selected_photo_frame: to display the selected photo
+        photo_crawler: a generator that yields a list of duplicated photos
         cached_cv: a list of canvases; cached_cv[0] display the selected photo, others are photo thumbs.
         """
         if len(photo_crawler)==0:
@@ -47,19 +49,14 @@ class NextBatchButton(Tkinter.Button):
             for cv in cached_cv:
                 cv.destroy()
             del cached_cv[:]
-        try: # fetch next batch
+        try:
+            # fetch next batch
             copies = photo_crawler[-1].next()
             # show the first photo in selected_photo_frame
-            height, width, channel = copies[0]["shape"]
-            ratio = float(height)/DISPLAY_HEIGHT
-            cached_cv.append(Canvas(selected_photo_frame, int(width/ratio), int(height/ratio)))
-            cached_cv[0].loadImages(copies[0]["path"])
+            cached_cv.append(PhotoCanvas(copies[0], selected_photo_frame, DISPLAY_HEIGHT))
             # show duplicated photo thumbs in batch_photo_frame
             for idx,cp in enumerate(copies):
-                height, width, channel = cp["shape"]
-                ratio = float(height)/THUMB_HEIGHT
-                cached_cv.append(Canvas(batch_photo_frame, int(width/ratio), int(height/ratio), cached_cv[0], cp["path"]))
-                cached_cv[-1].loadImages(cp["path"])
+                cached_cv.append(PhotoCanvas(cp, batch_photo_frame, THUMB_HEIGHT, cached_cv[0]))
             root.update_idletasks()
         except StopIteration:
             tkMessageBox.showinfo("Warning", "No more duplicated photos found.")

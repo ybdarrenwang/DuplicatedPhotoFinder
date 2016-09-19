@@ -1,21 +1,24 @@
 import Tkinter, Tkconstants, tkMessageBox
 from PIL import Image, ImageTk
 
-class Canvas(Tkinter.Canvas):
-    def __init__(self, parent, w, h, canvas4display=None, img_path=None):
-        self.width = w
-        self.height = h
-        Tkinter.Canvas.__init__(self, parent, width=w, height=h)
-        if canvas4display==None:
+class PhotoCanvas(Tkinter.Canvas):
+    def __init__(self, image, parent, display_height, extraCanvas4Display=None):
+        """
+        Note: will resize the image based on display_height
+        """
+        height, width, channel = image["shape"]
+        self.width = int(float(width)/height*display_height)
+        self.height = display_height
+        self.path = image["path"]
+        Tkinter.Canvas.__init__(self, parent, width=self.width, height=self.height)
+        if extraCanvas4Display==None:
             self.pack()
         else:
-            self.bind("<Button-1>", lambda event, cv=canvas4display, img=img_path: self.showcaseImage(cv, img))
+            self.bind("<Button-1>", lambda event: extraCanvas4Display.loadImages(self.path))
             self.pack(side=Tkinter.LEFT)
-        self.img = [None]
-        self.thumb = [None]
-
-    def showcaseImage(self, cv4display, img_path):
-        cv4display.loadImages(img_path)
+        self.img = [None] # cache of Tkinter canvas image
+        self.thumb = [None] # cache of Python image object
+        self.loadImages(self.path)
 
     def loadImages(self, image):
         tmp = Image.open(image).resize((self.width, self.height), Image.ANTIALIAS)

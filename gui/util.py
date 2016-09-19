@@ -1,7 +1,7 @@
-import os
+import os, sys
 import numpy as np
 import cv2
-import sys
+
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
