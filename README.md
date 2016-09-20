@@ -1,8 +1,8 @@
 Duplicated Photo Finder
 =======================
-This application is for finding and removing (not yet implemented) duplicated photos. Note it is assumed that the file name of the photos follows chronological order, and this application only checks if adjacent photos are duplicates.
+This application is for finding and removing (not yet implemented) similare photos the user has taken consecutively. For now it is assumed that the file names of the photos follow chronological order, and this application only checks if adjacent photos are duplicates.
 
-Right now I only use the average of absolute difference as the similarity measure of two images.
+The user can choose between mean absolute difference (L1) or mean square difference (L2) as the measure of image difference.
 
 Platforms tested
 ----------------
@@ -23,7 +23,8 @@ Run `python main.py` under command line environment.
 
 Wish list
 ---------
-- "Delete picture" function
-- "Rotate picture" function
+- "Delete picture" button
+- "Rotate picture" button
+- Compare photos across multiple folder
 - Calculate image similarity by histogram comparison (`cv2.compareHist()`)
     - Extension: use Mutual Information or Entropy for histogram comparison
