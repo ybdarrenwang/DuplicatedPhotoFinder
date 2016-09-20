@@ -1,11 +1,11 @@
-import os, sys
+import os, sys, math
 import numpy as np
 import cv2
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
-def duplicatePhotoCrawler(path):
+def duplicatePhotoCrawler(path, config):
     """
     - iterate over all photos in path
     - cache copies if found
@@ -18,8 +18,17 @@ def duplicatePhotoCrawler(path):
             if copies:
                 if img.shape==copies[-1]["shape"]:
                     prev_img = cv2.imread(copies[-1]["path"])
-                    dist = cv2.norm(img, prev_img)/img.size # average absolute difference
-                    if dist<0.007:
+                    if config['dist'].get()=='l1':
+                        dist = cv2.norm(img, prev_img, cv2.NORM_L1)/img.size # average absolute difference, threshold=30
+                        th = config['th_l1'].get()
+                    elif config['dist'].get()=='l2':
+                        dist = cv2.norm(img, prev_img, cv2.NORM_L2)
+                        dist = math.sqrt(dist*dist/img.size) # Euclidean distance, threshold=0.01
+                        th = config['th_l2'].get()
+                    else:
+                        tkMessageBox.showinfo("Error", "Unknown distance measure: "+config['dist'].get())
+                        exit("Error: Unknown distance measure: "+config['dist'].get())
+                    if dist<th:
                         copies.append({"path":photo, "shape":img.shape})
                         continue
                 if len(copies)>1:

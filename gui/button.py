@@ -4,35 +4,82 @@ from canvas import PhotoCanvas
 from config import *
 import util
 
+class CloseWindowButton(Tkinter.Button):
+    def __init__(self, parent):
+        self.root = parent
+        Tkinter.Button.__init__(self, parent, width=BUTTON_WIDTH, text='Done', font=tkFont.Font(family=FONT_FAMILY, size=DIALOG_FONT_SIZE), command=self.close)
+        self.pack(side=Tkinter.RIGHT)
+
+    def close(self):
+        self.root.destroy()
+
+
+class ConfigButton(Tkinter.Button):
+    """
+    This class owns configuration for photo similarity calculation, which will
+    be passed to the photo cralwer.
+    """
+    def __init__(self, parent):
+        self.config = {}
+        self.config['dist'] = Tkinter.StringVar()
+        self.config['dist'].set('l1')
+        self.config['th_l1'] = Tkinter.IntVar()
+        self.config['th_l1'].set(30)
+        self.config['th_l2'] = Tkinter.IntVar()
+        self.config['th_l2'].set(50)
+        Tkinter.Button.__init__(self, parent, width=BUTTON_WIDTH, text='Preference...', font=tkFont.Font(family=FONT_FAMILY, size=BUTTON_FONT_SIZE), command=self.openConfig)
+        self.pack(side=Tkinter.RIGHT)
+
+    def openConfig(self):
+        dialog = Tkinter.Toplevel(self)
+        dialog.geometry(str(DIALOG_WIDTH)+"x"+str(DIALOG_HEIGHT)+"+100+100")
+        dialog.minsize(width=DIALOG_WIDTH, height=DIALOG_HEIGHT)
+        dialog.title("Preference")
+        ft = tkFont.Font(family=FONT_FAMILY, size=DIALOG_FONT_SIZE)
+        opt_1 = Tkinter.Radiobutton(dialog, text="Find mean absolute difference (L1) below", font=ft, variable=self.config['dist'], value='l1')
+        if self.config['dist'].get() == 'l1':
+            opt_1.select()
+        else:
+            opt_1.deselect()
+        opt_1.pack(anchor=Tkinter.W)
+        box_1 = Tkinter.Spinbox(dialog, font=ft, textvariable=self.config['th_l1'], from_=0, to=100, increment=1).pack()
+        opt_2 = Tkinter.Radiobutton(dialog, text="Find mean square difference (L2) below", font=ft, variable=self.config['dist'], value='l2')
+        if self.config['dist'].get() == 'l2':
+            opt_2.select()
+        else:
+            opt_2.deselect()
+        opt_2.pack(anchor=Tkinter.W)
+        box_2 = Tkinter.Spinbox(dialog, font=ft, textvariable=self.config['th_l2'], from_=0, to=100, increment=1).pack()
+        close_button = CloseWindowButton(dialog)
+
+
 class OpenFolderButton(Tkinter.Button):
     """
-    Note: this class creates and owns the photo crawler while opening the
-    target folder, which will be passed to other functions for crawling.
+    This class creates and owns the photo crawler while opening the target
+    folder, which will be passed to other functions for crawling.
     """
-    def __init__(self, parent, frame):
+    def __init__(self, parent, frame, crawler_config):
         self.photo_crawler = []
         options = {}
         options['initialdir'] = 'C:\\'
         options['mustexist'] = False
         options['parent'] = parent
-        ft = tkFont.Font(family=FONT_FAMILY, size=FONT_SIZE)
-        Tkinter.Button.__init__(self, parent, width=BUTTON_WIDTH, text='Open folder', font=ft, command=lambda:self.askdirectory(self.photo_crawler, options, parent, frame))
+        Tkinter.Button.__init__(self, parent, width=BUTTON_WIDTH, text='Open folder', font=tkFont.Font(family=FONT_FAMILY, size=BUTTON_FONT_SIZE), command=lambda:self.askdirectory(self.photo_crawler, options, parent, frame, crawler_config))
         self.pack(side=Tkinter.LEFT)
 
     @staticmethod
-    def askdirectory(photo_crawler, options, root, frame):
+    def askdirectory(photo_crawler, options, root, frame, crawler_config):
         path = re.escape(tkFileDialog.askdirectory(**options))
         if path:
             del photo_crawler[:]
-            photo_crawler.append(util.duplicatePhotoCrawler(path))
+            photo_crawler.append(util.duplicatePhotoCrawler(path, crawler_config))
 
 
 class NextBatchButton(Tkinter.Button):
     def __init__(self, parent, batch_photo_frame, selected_photo_frame, photo_crawler):
         self.cached_canvases = []
-        ft = tkFont.Font(family=FONT_FAMILY, size=FONT_SIZE)
-        Tkinter.Button.__init__(self, parent, width=BUTTON_WIDTH, text='Find duplicates', font=ft, command=lambda:self.getNextDuplicatedBatch(parent, batch_photo_frame, selected_photo_frame, photo_crawler, self.cached_canvases))
-        self.pack(side=Tkinter.RIGHT)
+        Tkinter.Button.__init__(self, parent, width=BUTTON_WIDTH, text='Find duplicates', font=tkFont.Font(family=FONT_FAMILY, size=BUTTON_FONT_SIZE), command=lambda:self.getNextDuplicatedBatch(parent, batch_photo_frame, selected_photo_frame, photo_crawler, self.cached_canvases))
+        self.pack(side=Tkinter.LEFT)
 
     @staticmethod
     def getNextDuplicatedBatch(root, batch_photo_frame, selected_photo_frame, photo_crawler, cached_cv):

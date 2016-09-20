@@ -25,11 +25,5 @@ Wish list
 ---------
 - "Delete picture" function
 - "Rotate picture" function
-- Implement other image similarity metrics
-    - Euclidean distance
-    - Normalized Cross Correlation
-    - Compare histogram
-        - OpenCV method: compareHist()
-        - Extension: use Mutual Information or Entropy for histogram comparison
-- Measure image quality between original and disroted image
-    - Structural Similarity Index (SSIM)
+- Calculate image similarity by histogram comparison (`cv2.compareHist()`)
+    - Extension: use Mutual Information or Entropy for histogram comparison
