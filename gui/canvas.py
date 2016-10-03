@@ -7,11 +7,20 @@ class PhotoCanvas(Tkinter.Canvas):
     competingCanvasList: upon clicked, remove highlights on these canvases
     Note: will resize the image based on display_height
     """
-    def __init__(self, image, parent, display_height, extraCanvas4Display=None):
-        # configure display
+    def __init__(self, image, parent, max_height=None, max_width=None, extraCanvas4Display=None):
+        # resize picture if necessary
         height, width, channel = image["shape"]
-        self.width = int(float(width)/height*display_height)
-        self.height = display_height
+        ratio = 1
+        if max_height!=None or max_width!=None:
+            if max_height==None:
+                ratio = float(width)/max_width
+            elif max_width==None:
+                ratio = float(height)/max_height
+            else:
+                ratio = max(float(height)/max_height, float(width)/max_width)
+        self.width = int(float(width)/ratio)
+        self.height = int(float(height)/ratio)
+        # create canvas
         self.path = image["path"]
         Tkinter.Canvas.__init__(self, parent, width=self.width, height=self.height, highlightthickness=2, relief='ridge')
         # display image

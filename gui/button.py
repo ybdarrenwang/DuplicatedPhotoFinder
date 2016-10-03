@@ -19,7 +19,7 @@ class ConfigButton(Tkinter.Button):
     This class owns configuration for photo similarity calculation, which will
     be passed to the photo cralwer.
     """
-    def __init__(self, parent):
+    def __init__(self, parent, r, c):
         self.config = {}
         self.config['dist'] = Tkinter.StringVar()
         self.config['dist'].set('l1')
@@ -28,7 +28,7 @@ class ConfigButton(Tkinter.Button):
         self.config['th_l2'] = Tkinter.IntVar()
         self.config['th_l2'].set(50)
         Tkinter.Button.__init__(self, parent, width=BUTTON_WIDTH, text='Preference...', font=tkFont.Font(family=FONT_FAMILY, size=BUTTON_FONT_SIZE), command=self.openConfig)
-        self.pack(side=Tkinter.RIGHT)
+        self.grid(row=r, column=c)
 
     def openConfig(self):
         dialog = Tkinter.Toplevel(self)
@@ -58,14 +58,14 @@ class OpenFolderButton(Tkinter.Button):
     This class creates and owns the photo crawler while opening the target
     folder, which will be passed to other functions for crawling.
     """
-    def __init__(self, parent, frame, crawler_config):
+    def __init__(self, parent, frame, crawler_config, r, c):
         self.photo_crawler = []
         options = {}
         options['initialdir'] = 'C:\\'
         options['mustexist'] = False
         options['parent'] = parent
         Tkinter.Button.__init__(self, parent, width=BUTTON_WIDTH, text='Open folder', font=tkFont.Font(family=FONT_FAMILY, size=BUTTON_FONT_SIZE), command=lambda:self.askdirectory(self.photo_crawler, options, parent, frame, crawler_config))
-        self.pack(side=Tkinter.LEFT)
+        self.grid(row=r, column=c)
 
     @staticmethod
     def askdirectory(photo_crawler, options, root, frame, crawler_config):
@@ -76,10 +76,10 @@ class OpenFolderButton(Tkinter.Button):
 
 
 class NextBatchButton(Tkinter.Button):
-    def __init__(self, parent, batch_photo_frame, selected_photo_frame, photo_crawler):
+    def __init__(self, parent, batch_photo_frame, selected_photo_frame, photo_crawler, r, c):
         self.cached_canvases = []
         Tkinter.Button.__init__(self, parent, width=BUTTON_WIDTH, text='Find duplicates', font=tkFont.Font(family=FONT_FAMILY, size=BUTTON_FONT_SIZE), command=lambda:self.getNextDuplicatedBatch(parent, batch_photo_frame, selected_photo_frame, photo_crawler, self.cached_canvases))
-        self.pack(side=Tkinter.LEFT)
+        self.grid(row=r, column=c)
 
     @staticmethod
     def getNextDuplicatedBatch(root, batch_photo_frame, selected_photo_frame, photo_crawler, cached_cv):
@@ -100,10 +100,10 @@ class NextBatchButton(Tkinter.Button):
             # fetch next batch
             copies = photo_crawler[-1].next()
             # show the first photo in selected_photo_frame
-            cached_cv.append(PhotoCanvas(copies[0], selected_photo_frame, DISPLAY_HEIGHT))
+            cached_cv.append(PhotoCanvas(copies[0], selected_photo_frame, DISPLAY_HEIGHT, DISPLAY_WIDTH))
             # show duplicated photo thumbs in batch_photo_frame
             for idx,cp in enumerate(copies):
-                cached_cv.append(PhotoCanvas(cp, batch_photo_frame, THUMB_HEIGHT, cached_cv[0]))
+                cached_cv.append(PhotoCanvas(cp, batch_photo_frame, THUMB_HEIGHT, None, cached_cv[0]))
             # copy pointers of all thumbs to each of them, so they can remove others' highlights when needed
             for cv in cached_cv[1:]:
                 cv.setCompetingCanvases(cached_cv[1:])
