@@ -8,7 +8,7 @@ class CloseWindowButton(Tkinter.Button):
     def __init__(self, parent):
         self.root = parent
         Tkinter.Button.__init__(self, parent, width=BUTTON_WIDTH, text='Done', font=tkFont.Font(family=FONT_FAMILY, size=DIALOG_FONT_SIZE), command=self.close)
-        self.pack(side=Tkinter.RIGHT)
+        self.pack(side=Tkinter.RIGHT, padx=5, pady=5)
 
     def close(self):
         self.root.destroy()
@@ -28,7 +28,7 @@ class ConfigButton(Tkinter.Button):
         self.config['th_l2'] = Tkinter.IntVar()
         self.config['th_l2'].set(50)
         Tkinter.Button.__init__(self, parent, width=BUTTON_WIDTH, text='Preference...', font=tkFont.Font(family=FONT_FAMILY, size=BUTTON_FONT_SIZE), command=self.openConfig)
-        self.grid(row=r, column=c)
+        self.grid(row=r, column=c, padx=5, pady=5)
 
     def openConfig(self):
         dialog = Tkinter.Toplevel(self)
@@ -65,7 +65,7 @@ class OpenFolderButton(Tkinter.Button):
         options['mustexist'] = False
         options['parent'] = parent
         Tkinter.Button.__init__(self, parent, width=BUTTON_WIDTH, text='Open folder', font=tkFont.Font(family=FONT_FAMILY, size=BUTTON_FONT_SIZE), command=lambda:self.askdirectory(self.photo_crawler, options, parent, frame, crawler_config))
-        self.grid(row=r, column=c)
+        self.grid(row=r, column=c, padx=5, pady=5)
 
     @staticmethod
     def askdirectory(photo_crawler, options, root, frame, crawler_config):
@@ -79,7 +79,7 @@ class NextBatchButton(Tkinter.Button):
     def __init__(self, parent, batch_photo_frame, selected_photo_frame, photo_crawler, r, c):
         self.cached_canvases = []
         Tkinter.Button.__init__(self, parent, width=BUTTON_WIDTH, text='Find duplicates', font=tkFont.Font(family=FONT_FAMILY, size=BUTTON_FONT_SIZE), command=lambda:self.getNextDuplicatedBatch(parent, batch_photo_frame, selected_photo_frame, photo_crawler, self.cached_canvases))
-        self.grid(row=r, column=c)
+        self.grid(row=r, column=c, padx=5, pady=5)
 
     @staticmethod
     def getNextDuplicatedBatch(root, batch_photo_frame, selected_photo_frame, photo_crawler, cached_cv):
