@@ -1,3 +1,4 @@
+import os, datetime
 import Tkinter, Tkconstants, tkMessageBox
 from PIL import Image, ImageTk
 
@@ -7,7 +8,7 @@ class PhotoCanvas(Tkinter.Canvas):
     competingCanvasList: upon clicked, remove highlights on these canvases
     Note: will resize the image based on display_height
     """
-    def __init__(self, image, parent, max_height=None, max_width=None, extraCanvas4Display=None):
+    def __init__(self, image, parent, max_height=None, max_width=None, extraCanvas4Display=None, info_label=None):
         # resize picture if necessary
         height, width, channel = image["shape"]
         ratio = 1
@@ -20,10 +21,11 @@ class PhotoCanvas(Tkinter.Canvas):
                 ratio = max(float(height)/max_height, float(width)/max_width)
         self.width = int(float(width)/ratio)
         self.height = int(float(height)/ratio)
-        # create canvas
+        # prepare for file info display
         self.path = image["path"]
+        self.info_label = info_label
+        # create canvas and display image
         Tkinter.Canvas.__init__(self, parent, width=self.width, height=self.height, highlightthickness=2, relief='ridge')
-        # display image
         self.img = [None] # cache of Tkinter canvas image
         self.thumb = [None] # cache of Python image object
         self.loadImages(self.path)
@@ -43,6 +45,10 @@ class PhotoCanvas(Tkinter.Canvas):
         for cv in self.competing_canvas:
             cv.configure(highlightbackground=cv.default_color, highlightcolor=cv.default_color)
         self.configure(highlightbackground="red", highlightcolor="red")
+        info = '\n'.join(["File name:", self.path.split('/')[-1],'',
+                          "File size (kB):", str(round(float(os.stat(self.path).st_size)/1000, 1)),'',
+                          "Last modified:", str(datetime.datetime.fromtimestamp(os.stat(self.path).st_mtime))])
+        self.info_label.configure(text=info)
         if extraCanvas4Display!=None:
             extraCanvas4Display.loadImages(self.path)
 

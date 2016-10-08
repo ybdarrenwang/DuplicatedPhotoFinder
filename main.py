@@ -1,4 +1,4 @@
-import sys, Tkinter
+import sys, Tkinter, tkFont
 sys.path.insert(0, "./gui/")
 import button
 from config import *
@@ -21,19 +21,25 @@ Tkinter.Grid.rowconfigure(root, 0, weight=1)
 Tkinter.Grid.rowconfigure(root, 1, weight=1)
 Tkinter.Grid.rowconfigure(root, 2, weight=0)
 
-# create frame for selected photo display
+# create frame for displaying selected photo
 selected_photo_frame = Tkinter.Frame(root, height=DISPLAY_HEIGHT, width=DISPLAY_WIDTH)
 selected_photo_frame.grid(row=0, column=0, columnspan=3, sticky=Tkinter.W+Tkinter.E)
 
+# create frame for displaying file info
 selected_photo_info_frame = Tkinter.Frame(root, height=DISPLAY_HEIGHT, width=INFO_WIDTH)
-selected_photo_info_frame.grid(row=0, column=3, sticky=Tkinter.W+Tkinter.E)
+selected_photo_info_frame.grid(row=0, column=3)
+selected_photo_info_frame.pack_propagate(False) # by default the frame will shrink to whatever is inside of it
+photo_info = Tkinter.Label(selected_photo_info_frame, height=NUM_INFO_LINE, font=tkFont.Font(family=FONT_FAMILY, size=DIALOG_FONT_SIZE))
+photo_info.pack(expand=True, padx=5, pady=5)
+delete_button = button.DeletePhotoButton(selected_photo_info_frame)
+delete_button.pack(expand=True)
 
 # create background for scroll bar
 bg_frame = Tkinter.Frame(root, height=THUMB_HEIGHT)
 bg_frame.grid(row=1, column=0, columnspan=4, sticky=Tkinter.W+Tkinter.E)
 bg_canvas = Tkinter.Canvas(bg_frame)
 xscrollbar = Tkinter.Scrollbar(bg_frame, orient="horizontal", command=bg_canvas.xview)
-xscrollbar.pack(side="bottom", fill="x")
+xscrollbar.pack(side=Tkinter.BOTTOM, fill="x")
 xscrollbar.grid_forget()
 bg_canvas.configure(xscrollcommand=xscrollbar.set)
 bg_canvas.pack(fill=Tkinter.BOTH, expand=True, padx=5, pady=5)
@@ -47,6 +53,6 @@ batch_photo_frame.bind("<Configure>", AuxscrollFunction)
 # create buttons
 button_cfg = button.ConfigButton(root, 2, 3)
 button_open = button.OpenFolderButton(root, batch_photo_frame, button_cfg.config, 2, 0)
-button_next = button.NextBatchButton(root, batch_photo_frame, selected_photo_frame, button_open.photo_crawler, 2, 1)
+button_next = button.NextBatchButton(root, batch_photo_frame, selected_photo_frame, photo_info, button_open.photo_crawler, 2, 1)
 
 root.mainloop()

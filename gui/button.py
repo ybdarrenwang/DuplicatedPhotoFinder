@@ -76,16 +76,17 @@ class OpenFolderButton(Tkinter.Button):
 
 
 class NextBatchButton(Tkinter.Button):
-    def __init__(self, parent, batch_photo_frame, selected_photo_frame, photo_crawler, r, c):
+    def __init__(self, parent, batch_photo_frame, selected_photo_frame, selected_photo_label, photo_crawler, r, c):
         self.cached_canvases = []
-        Tkinter.Button.__init__(self, parent, width=BUTTON_WIDTH, text='Find duplicates', font=tkFont.Font(family=FONT_FAMILY, size=BUTTON_FONT_SIZE), command=lambda:self.getNextDuplicatedBatch(parent, batch_photo_frame, selected_photo_frame, photo_crawler, self.cached_canvases))
+        Tkinter.Button.__init__(self, parent, width=BUTTON_WIDTH, text='Find duplicates', font=tkFont.Font(family=FONT_FAMILY, size=BUTTON_FONT_SIZE), command=lambda:self.getNextDuplicatedBatch(parent, batch_photo_frame, selected_photo_frame, selected_photo_label, photo_crawler, self.cached_canvases))
         self.grid(row=r, column=c, padx=5, pady=5)
 
     @staticmethod
-    def getNextDuplicatedBatch(root, batch_photo_frame, selected_photo_frame, photo_crawler, cached_cv):
+    def getNextDuplicatedBatch(root, batch_photo_frame, selected_photo_frame, selected_photo_label, photo_crawler, cached_cv):
         """
         batch_photo_frame: to display the thumbs of all duplicated photos
         selected_photo_frame: to display the selected photo
+        selected_photo_label: to display the file info of selected photo
         photo_crawler: a generator that yields a list of duplicated photos
         cached_cv: a list of canvases; cached_cv[0] display the selected photo, others are photo thumbs.
         """
@@ -103,7 +104,7 @@ class NextBatchButton(Tkinter.Button):
             cached_cv.append(PhotoCanvas(copies[0], selected_photo_frame, DISPLAY_HEIGHT, DISPLAY_WIDTH))
             # show duplicated photo thumbs in batch_photo_frame
             for idx,cp in enumerate(copies):
-                cached_cv.append(PhotoCanvas(cp, batch_photo_frame, THUMB_HEIGHT, None, cached_cv[0]))
+                cached_cv.append(PhotoCanvas(cp, batch_photo_frame, THUMB_HEIGHT-2*MARGIN, None, cached_cv[0], selected_photo_label))
             # copy pointers of all thumbs to each of them, so they can remove others' highlights when needed
             for cv in cached_cv[1:]:
                 cv.setCompetingCanvases(cached_cv[1:])
@@ -112,3 +113,9 @@ class NextBatchButton(Tkinter.Button):
             root.update_idletasks()
         except StopIteration:
             tkMessageBox.showinfo("Warning", "No more duplicated photos found.")
+
+class DeletePhotoButton(Tkinter.Button):
+    def __init__(self, parent):
+        self.root = parent
+        Tkinter.Button.__init__(self, parent, width=BUTTON_WIDTH, text='Recycle photo', font=tkFont.Font(family=FONT_FAMILY, size=DIALOG_FONT_SIZE))
+        self.pack(side=Tkinter.BOTTOM, padx=5, pady=5)
