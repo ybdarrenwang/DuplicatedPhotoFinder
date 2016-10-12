@@ -31,8 +31,6 @@ selected_photo_info_frame.grid(row=0, column=3)
 selected_photo_info_frame.pack_propagate(False) # by default the frame will shrink to whatever is inside of it
 photo_info = Tkinter.Label(selected_photo_info_frame, height=NUM_INFO_LINE, font=tkFont.Font(family=FONT_FAMILY, size=DIALOG_FONT_SIZE), background="white")
 photo_info.pack(expand=True, padx=5, pady=5)
-delete_button = button.DeletePhotoButton(selected_photo_info_frame)
-delete_button.pack(expand=True)
 
 # create background for scroll bar
 bg_frame = Tkinter.Frame(root, height=THUMB_HEIGHT)
@@ -54,5 +52,6 @@ batch_photo_frame.bind("<Configure>", AuxscrollFunction)
 button_cfg = button.ConfigButton(root, 2, 3)
 button_open = button.OpenFolderButton(root, batch_photo_frame, button_cfg.config, 2, 0)
 button_next = button.NextBatchButton(root, batch_photo_frame, selected_photo_frame, photo_info, button_open.photo_crawler, 2, 1)
+button_delete = button.DeletePhotoButton(selected_photo_info_frame, button_next)
 
 root.mainloop()

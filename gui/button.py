@@ -114,8 +114,13 @@ class NextBatchButton(Tkinter.Button):
         except StopIteration:
             tkMessageBox.showinfo("Warning", "No more duplicated photos found.")
 
+
 class DeletePhotoButton(Tkinter.Button):
-    def __init__(self, parent):
+    def __init__(self, parent, next_batch_button):
         self.root = parent
-        Tkinter.Button.__init__(self, parent, width=BUTTON_WIDTH, text='Recycle photo', font=tkFont.Font(family=FONT_FAMILY, size=DIALOG_FONT_SIZE))
+        self.next_batch_button = next_batch_button
+        Tkinter.Button.__init__(self, parent, width=BUTTON_WIDTH, text='Recycle photo', font=tkFont.Font(family=FONT_FAMILY, size=DIALOG_FONT_SIZE), command=lambda:self.deletePhoto())
         self.pack(side=Tkinter.BOTTOM, padx=5, pady=5)
+
+    def deletePhoto(self):
+        pass
