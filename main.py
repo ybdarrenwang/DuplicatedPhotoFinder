@@ -26,10 +26,10 @@ selected_photo_frame = Tkinter.Frame(root, height=DISPLAY_HEIGHT, width=DISPLAY_
 selected_photo_frame.grid(row=0, column=0, columnspan=3, sticky=Tkinter.W+Tkinter.E)
 
 # create frame for displaying file info
-selected_photo_info_frame = Tkinter.Frame(root, height=DISPLAY_HEIGHT, width=INFO_WIDTH)
+selected_photo_info_frame = Tkinter.Frame(root, height=DISPLAY_HEIGHT, width=INFO_WIDTH, background="white")
 selected_photo_info_frame.grid(row=0, column=3)
 selected_photo_info_frame.pack_propagate(False) # by default the frame will shrink to whatever is inside of it
-photo_info = Tkinter.Label(selected_photo_info_frame, height=NUM_INFO_LINE, font=tkFont.Font(family=FONT_FAMILY, size=DIALOG_FONT_SIZE))
+photo_info = Tkinter.Label(selected_photo_info_frame, height=NUM_INFO_LINE, font=tkFont.Font(family=FONT_FAMILY, size=DIALOG_FONT_SIZE), background="white")
 photo_info.pack(expand=True, padx=5, pady=5)
 delete_button = button.DeletePhotoButton(selected_photo_info_frame)
 delete_button.pack(expand=True)
@@ -37,7 +37,7 @@ delete_button.pack(expand=True)
 # create background for scroll bar
 bg_frame = Tkinter.Frame(root, height=THUMB_HEIGHT)
 bg_frame.grid(row=1, column=0, columnspan=4, sticky=Tkinter.W+Tkinter.E)
-bg_canvas = Tkinter.Canvas(bg_frame)
+bg_canvas = Tkinter.Canvas(bg_frame, background='white')
 xscrollbar = Tkinter.Scrollbar(bg_frame, orient="horizontal", command=bg_canvas.xview)
 xscrollbar.pack(side=Tkinter.BOTTOM, fill="x")
 xscrollbar.grid_forget()
@@ -45,7 +45,7 @@ bg_canvas.configure(xscrollcommand=xscrollbar.set)
 bg_canvas.pack(fill=Tkinter.BOTH, expand=True, padx=5, pady=5)
 
 # create frame for duplicated photo batch display
-batch_photo_frame = Tkinter.Frame(bg_canvas, height=THUMB_HEIGHT)
+batch_photo_frame = Tkinter.Frame(bg_canvas, height=THUMB_HEIGHT, background='white')
 bg_canvas.create_window((0,0),window=batch_photo_frame,anchor='nw')
 batch_photo_frame.bind("<Configure>", AuxscrollFunction)
 # Note: don't pack batch_photo_frame here, otherwise scroll bar won't show!!!

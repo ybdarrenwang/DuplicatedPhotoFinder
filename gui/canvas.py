@@ -25,7 +25,7 @@ class PhotoCanvas(Tkinter.Canvas):
         self.path = image["path"]
         self.info_label = info_label
         # create canvas and display image
-        Tkinter.Canvas.__init__(self, parent, width=self.width, height=self.height, highlightthickness=2, relief='ridge')
+        Tkinter.Canvas.__init__(self, parent, width=self.width, height=self.height, highlightthickness=2, relief='ridge', background='white')
         self.img = [None] # cache of Tkinter canvas image
         self.thumb = [None] # cache of Python image object
         self.loadImages(self.path)
