@@ -1,6 +1,6 @@
 import sys, Tkinter, tkFont
 sys.path.insert(0, "./gui/")
-import button
+import button, database
 from config import *
 
 # Note: need to set size for bg_canvas here; otherwise it will grow disregard the size set while created!
@@ -48,10 +48,13 @@ bg_canvas.create_window((0,0),window=batch_photo_frame,anchor='nw')
 batch_photo_frame.bind("<Configure>", AuxscrollFunction)
 # Note: don't pack batch_photo_frame here, otherwise scroll bar won't show!!!
 
+# create photo database
+db = database.Database()
+
 # create buttons
-button_cfg = button.ConfigButton(root, 2, 3)
-button_open = button.OpenFolderButton(root, batch_photo_frame, button_cfg.config, 2, 0)
-button_next = button.NextBatchButton(root, batch_photo_frame, selected_photo_frame, photo_info, button_open.photo_crawler, 2, 1)
+button_cfg = button.ConfigButton(root, db, 2, 3)
+button_open = button.OpenFolderButton(root, batch_photo_frame, db, 2, 0)
+button_next = button.NextBatchButton(root, batch_photo_frame, selected_photo_frame, photo_info, db, 2, 1)
 button_delete = button.DeletePhotoButton(selected_photo_info_frame, button_next)
 
 root.mainloop()
