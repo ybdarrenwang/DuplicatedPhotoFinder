@@ -29,8 +29,6 @@ selected_photo_frame.grid(row=0, column=0, columnspan=3, sticky=Tkinter.W+Tkinte
 selected_photo_info_frame = Tkinter.Frame(root, height=DISPLAY_HEIGHT, width=INFO_WIDTH, background="white")
 selected_photo_info_frame.grid(row=0, column=3)
 selected_photo_info_frame.pack_propagate(False) # by default the frame will shrink to whatever is inside of it
-photo_info = Tkinter.Label(selected_photo_info_frame, height=NUM_INFO_LINE, font=tkFont.Font(family=FONT_FAMILY, size=DIALOG_FONT_SIZE), background="white")
-photo_info.pack(expand=True, padx=5, pady=5)
 
 # create background for scroll bar
 bg_frame = Tkinter.Frame(root, height=THUMB_HEIGHT)
@@ -54,7 +52,6 @@ db = database.Database()
 # create buttons
 button_cfg = button.ConfigButton(root, db, 2, 3)
 button_open = button.OpenFolderButton(root, batch_photo_frame, db, 2, 0)
-button_next = button.NextBatchButton(root, batch_photo_frame, selected_photo_frame, photo_info, db, 2, 1)
-button_delete = button.DeletePhotoButton(selected_photo_info_frame, db, button_next.cv4display)
+button_next = button.NextBatchButton(root, batch_photo_frame, selected_photo_frame, selected_photo_info_frame, db, 2, 1)
 
 root.mainloop()

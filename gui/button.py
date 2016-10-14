@@ -78,7 +78,13 @@ class OpenFolderButton(Tkinter.Button):
             self.db.setCrawler(path)
 
 class NextBatchButton(Tkinter.Button):
-    def __init__(self, parent, batch_photo_frame, selected_photo_frame, selected_photo_label, db, r, c):
+    """
+    Note: this class owns
+    1) canvases to display photos
+    2) photo info label
+    3) delete photo button
+    """
+    def __init__(self, parent, batch_photo_frame, selected_photo_frame, selected_photo_info_frame, db, r, c):
         """
         batch_photo_frame: to display the thumbs of all duplicated photos
         selected_photo_frame: to display the selected photo
@@ -87,12 +93,20 @@ class NextBatchButton(Tkinter.Button):
         """
         self.cv4display = []
         self.db = db
-        Tkinter.Button.__init__(self, parent, width=BUTTON_WIDTH, text='Find duplicates', font=tkFont.Font(family=FONT_FAMILY, size=BUTTON_FONT_SIZE), command=lambda:self.getNextDuplicatedBatch(parent, batch_photo_frame, selected_photo_frame, selected_photo_label))
+        # create photo info label and delete photo button
+        self.photo_info = Tkinter.Label(selected_photo_info_frame, height=NUM_INFO_LINE, font=tkFont.Font(family=FONT_FAMILY, size=DIALOG_FONT_SIZE), background="white")
+        self.photo_info.pack(expand=True, padx=5, pady=5)
+        self.photo_info.pack_forget() # hide photo info whenever photo is absent
+        self.button_delete = DeletePhotoButton(selected_photo_info_frame, self.db, self.cv4display)
+        self.button_delete.pack_forget() # hide delete button whenever photo is absent
+        # create self
+        Tkinter.Button.__init__(self, parent, width=BUTTON_WIDTH, text='Find duplicates', font=tkFont.Font(family=FONT_FAMILY, size=BUTTON_FONT_SIZE), command=lambda:self.getNextDuplicatedBatch(parent, batch_photo_frame, selected_photo_frame, self.photo_info))
         self.grid(row=r, column=c, padx=5, pady=5)
 
-    def getNextDuplicatedBatch(self, root, batch_photo_frame, selected_photo_frame, selected_photo_label):
+    def getNextDuplicatedBatch(self, root, batch_photo_frame, selected_photo_frame, photo_info):
         if self.db.crawler==None:
             tkMessageBox.showinfo("Warning", "Please choose a folder.")
+            self.button_delete.pack_forget()
             return
         if self.cv4display: # delete canvases of previous batch
             for cv in self.cv4display:
@@ -105,15 +119,17 @@ class NextBatchButton(Tkinter.Button):
             self.cv4display.append(PhotoCanvas(copies[0], selected_photo_frame, DISPLAY_HEIGHT, DISPLAY_WIDTH))
             # show duplicated photo thumbs in batch_photo_frame
             for idx,cp in enumerate(copies):
-                self.cv4display.append(PhotoCanvas(cp, batch_photo_frame, THUMB_HEIGHT-2*MARGIN, None, self.cv4display[0], selected_photo_label))
+                self.cv4display.append(PhotoCanvas(cp, batch_photo_frame, THUMB_HEIGHT-2*MARGIN, None, self.cv4display[0], photo_info))
             # copy pointers of all thumbs to each of them, so they can remove others' highlights when needed
             for cv in self.cv4display[1:]:
                 cv.setCompetingCanvases(self.cv4display[1:])
             # highlight the first picture
             self.cv4display[1].highlight()
-            #root.update_idletasks()
-            #button_delete.pack()
+            self.photo_info.pack()
+            self.button_delete.pack()
         except StopIteration:
+            self.photo_info.pack_forget() # hide photo info whenever photo is absent
+            self.button_delete.pack_forget()
             tkMessageBox.showinfo("Warning", "No more duplicated photos found.")
 
 
@@ -127,7 +143,6 @@ class DeletePhotoButton(Tkinter.Button):
         self.cv4display = cv4display
         Tkinter.Button.__init__(self, parent, width=BUTTON_WIDTH, text='Recycle photo', font=tkFont.Font(family=FONT_FAMILY, size=DIALOG_FONT_SIZE), command=lambda:self.deletePhoto())
         self.pack(side=Tkinter.BOTTOM, padx=5, pady=5)
-        #self.pack_forget()
 
     def deletePhoto(self):
         for i in range(len(self.db.duplicated_batch)):
@@ -142,4 +157,3 @@ class DeletePhotoButton(Tkinter.Button):
             cv.setCompetingCanvases(self.cv4display[1:])
         # highlight the first picture
         self.cv4display[1].highlight()
-        #root.update_idletasks()
