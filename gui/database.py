@@ -18,6 +18,7 @@ class Database:
 
     def setCrawler(self, path):
         self.crawler = self.duplicatedPhotoGenerator(path)
+        self.duplicated_batch = []
 
     def next(self):
         return self.crawler.next()

@@ -74,8 +74,7 @@ class OpenFolderButton(Tkinter.Button):
 
     def askdirectory(self, options):
         path = re.escape(tkFileDialog.askdirectory(**options))
-        if path:
-            self.db.setCrawler(path)
+        self.db.setCrawler(path)
 
 class NextBatchButton(Tkinter.Button):
     """
@@ -106,14 +105,14 @@ class NextBatchButton(Tkinter.Button):
     def getNextDuplicatedBatch(self, root, batch_photo_frame, selected_photo_frame, photo_info):
         if self.db.crawler==None:
             tkMessageBox.showinfo("Warning", "Please choose a folder.")
-            self.button_delete.pack_forget()
             return
         if self.cv4display: # delete canvases of previous batch
-            print 1
             for cv in self.cv4display:
                 cv.destroy()
             del self.cv4display[:]
         try:
+            self.photo_info.pack_forget()
+            self.button_delete.pack_forget()
             # fetch next batch
             copies = self.db.next()
             # show the first photo in selected_photo_frame
@@ -129,8 +128,6 @@ class NextBatchButton(Tkinter.Button):
             self.photo_info.pack()
             self.button_delete.pack()
         except StopIteration:
-            self.photo_info.pack_forget() # hide photo info whenever photo is absent
-            self.button_delete.pack_forget()
             tkMessageBox.showinfo("Warning", "No more duplicated photos found.")
 
 

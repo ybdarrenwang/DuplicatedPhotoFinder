@@ -24,8 +24,7 @@ Run `python main.py` under command line environment.
 
 Wish list
 ---------
-- "Rotate picture" function
-- "Rename picture" function
+- Compare rotated pictures
 - Compare photos across multiple folder
 - Calculate image similarity by histogram comparison (`cv2.compareHist()`)
     - Extension: use Mutual Information or Entropy for histogram comparison
