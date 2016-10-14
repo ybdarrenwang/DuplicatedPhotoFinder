@@ -37,6 +37,7 @@ class PhotoCanvas(Tkinter.Canvas):
         else:
             self.bind("<Button-1>", lambda event: self.highlight(extraCanvas4Display))
             self.pack(side=Tkinter.LEFT)
+        self.isSelected = False
 
     def setCompetingCanvases(self, competingCanvasList):
         self.competing_canvas = competingCanvasList
@@ -44,7 +45,9 @@ class PhotoCanvas(Tkinter.Canvas):
     def highlight(self, extraCanvas4Display=None):
         for cv in self.competing_canvas:
             cv.configure(highlightbackground=cv.default_color, highlightcolor=cv.default_color)
+            cv.isSelected = False
         self.configure(highlightbackground="red", highlightcolor="red")
+        self.isSelected = True
         info = '\n'.join(["File name:", self.path.split('/')[-1],'',
                           "File size (kB):", str(round(float(os.stat(self.path).st_size)/1000, 1)),'',
                           "Last modified:", str(datetime.datetime.fromtimestamp(os.stat(self.path).st_mtime))])

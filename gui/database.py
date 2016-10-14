@@ -11,6 +11,7 @@ class Database:
     # static variable, so it'd be passed along disregarding photo folder changes
     config = {'dist':'l1', 'th_l1':30, 'th_l2':50}
     crawler = None
+    duplicated_batch = []
 
     def __init__(self):
         pass
@@ -24,16 +25,15 @@ class Database:
     def duplicatedPhotoGenerator(self, path):
         """
         - iterate over all photos in path
-        - cache copies if found
-        - yield group of copies
+        - cache duplicated_batch if found
+        - yield group of duplicated_batch
         """
-        copies = []
         for photo in os.popen("ls %s/*" % path).read().splitlines():
             img = cv2.imread(photo)
             if img!=None:
-                if copies:
-                    if img.shape==copies[-1]["shape"]:
-                        prev_img = cv2.imread(copies[-1]["path"])
+                if self.duplicated_batch:
+                    if img.shape==self.duplicated_batch[-1]["shape"]:
+                        prev_img = cv2.imread(self.duplicated_batch[-1]["path"])
                         if self.config['dist']=='l1':
                             dist = cv2.norm(img, prev_img, cv2.NORM_L1)/img.size # average absolute difference, threshold=30
                             th = self.config['th_l1']
@@ -45,11 +45,11 @@ class Database:
                             tkMessageBox.showinfo("Error", "Unknown distance measure: "+self.config['dist'])
                             exit("Error: Unknown distance measure: "+self.config['dist'])
                         if dist<th:
-                            copies.append({"path":photo, "shape":img.shape})
+                            self.duplicated_batch.append({"path":photo, "shape":img.shape})
                             continue
-                    if len(copies)>1:
-                        yield copies
-                copies = [{"path":photo, "shape":img.shape}]
-        if len(copies)>1: # the last batch of copies
-            yield copies
+                    if len(self.duplicated_batch)>1:
+                        yield self.duplicated_batch
+                self.duplicated_batch = [{"path":photo, "shape":img.shape}]
+        if len(self.duplicated_batch)>1: # the last batch
+            yield self.duplicated_batch
         raise StopIteration

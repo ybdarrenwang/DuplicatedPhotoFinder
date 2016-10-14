@@ -55,6 +55,6 @@ db = database.Database()
 button_cfg = button.ConfigButton(root, db, 2, 3)
 button_open = button.OpenFolderButton(root, batch_photo_frame, db, 2, 0)
 button_next = button.NextBatchButton(root, batch_photo_frame, selected_photo_frame, photo_info, db, 2, 1)
-button_delete = button.DeletePhotoButton(selected_photo_info_frame, button_next)
+button_delete = button.DeletePhotoButton(selected_photo_info_frame, db, button_next.cv4display)
 
 root.mainloop()

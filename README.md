@@ -16,6 +16,7 @@ Prerequisites
 - Python Image Library
     - Install on Linux(Ubuntu): `sudo apt-get install python-imaging-tk`
     - Install on OS X: `sudo easy_install pip;sudo pip install pillow`
+- [Send2Trash -- Send files to trash on all platforms](https://github.com/hsoft/send2trash/)
 
 Execution
 ---------
@@ -23,8 +24,8 @@ Run `python main.py` under command line environment.
 
 Wish list
 ---------
-- "Delete picture" button
-- "Rotate picture" button
+- "Rotate picture" function
+- "Rename picture" function
 - Compare photos across multiple folder
 - Calculate image similarity by histogram comparison (`cv2.compareHist()`)
     - Extension: use Mutual Information or Entropy for histogram comparison
