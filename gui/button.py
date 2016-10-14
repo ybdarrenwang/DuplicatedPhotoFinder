@@ -109,6 +109,7 @@ class NextBatchButton(Tkinter.Button):
             self.button_delete.pack_forget()
             return
         if self.cv4display: # delete canvases of previous batch
+            print 1
             for cv in self.cv4display:
                 cv.destroy()
             del self.cv4display[:]
