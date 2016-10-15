@@ -38,7 +38,7 @@ xscrollbar = Tkinter.Scrollbar(bg_frame, orient="horizontal", command=bg_canvas.
 xscrollbar.pack(side=Tkinter.BOTTOM, fill="x")
 xscrollbar.grid_forget()
 bg_canvas.configure(xscrollcommand=xscrollbar.set)
-bg_canvas.pack(fill=Tkinter.BOTH, expand=True, padx=5, pady=5)
+bg_canvas.pack(fill=Tkinter.BOTH, expand=True, pady=5)
 
 # create frame for duplicated photo batch display
 batch_photo_frame = Tkinter.Frame(bg_canvas, height=THUMB_HEIGHT, background='white')
