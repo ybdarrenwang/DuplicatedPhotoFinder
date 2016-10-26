@@ -143,15 +143,24 @@ class DeletePhotoButton(Tkinter.Button):
         self.pack(side=Tkinter.BOTTOM, padx=5, pady=5)
 
     def deletePhoto(self):
+        if len(self.cv4display)==0:
+            tkMessageBox.showinfo("Warning", "No more photos from this batch!")
+            return
         for i in range(len(self.db.duplicated_batch)):
             if self.cv4display[i+1].isSelected:
+                self.cv4display[i+1].info_label.configure(text='')
                 self.cv4display[i+1].destroy()
                 del self.cv4display[i+1]
                 send2trash(self.db.duplicated_batch[i]['path'])
                 del self.db.duplicated_batch[i]
                 break
-        # copy pointers of all thumbs to each of them, so they can remove others' highlights when needed
-        for cv in self.cv4display[1:]:
-            cv.setCompetingCanvases(self.cv4display[1:])
-        # highlight the first picture
-        self.cv4display[1].highlight()
+        if len(self.cv4display)>1:
+            # copy pointers of all thumbs to each of them, so they can remove others' highlights when needed
+            for cv in self.cv4display[1:]:
+                cv.setCompetingCanvases(self.cv4display[1:])
+            # highlight the first picture
+            self.cv4display[1].highlight()
+        else: # entire batch deleted
+            self.cv4display[0].destroy()
+            del self.cv4display[0]
+            del self.db.duplicated_batch[0]
