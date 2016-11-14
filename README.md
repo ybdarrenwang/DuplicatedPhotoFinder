@@ -13,6 +13,8 @@ Prerequisites
 - OpenCV for Python
     - [Install on Linux(Ubuntu)](http://www.pyimagesearch.com/2015/06/22/install-opencv-3-0-and-python-2-7-on-ubuntu/)
     - [Install on OSX](http://www.pyimagesearch.com/2015/06/15/install-opencv-3-0-and-python-2-7-on-osx/)
+- python-opencv package
+    - `sudo apt-get install python-opencv`
 - Python Image Library
     - Install on Linux(Ubuntu): `sudo apt-get install python-imaging-tk`
     - Install on OS X: `sudo easy_install pip;sudo pip install pillow`
