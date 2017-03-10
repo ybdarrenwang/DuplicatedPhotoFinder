@@ -1,5 +1,5 @@
 import sys, Tkinter, tkFont
-sys.path.insert(0, "./gui/")
+sys.path.insert(0, "./src/")
 import button, database
 from config import *
 

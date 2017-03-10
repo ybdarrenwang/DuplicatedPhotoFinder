@@ -8,9 +8,9 @@ class PhotoCanvas(Tkinter.Canvas):
     competingCanvasList: upon clicked, remove highlights on these canvases
     Note: will resize the image based on display_height
     """
-    def __init__(self, image, parent, max_height=None, max_width=None, extraCanvas4Display=None, info_label=None):
+    def __init__(self, photo, parent, max_height=None, max_width=None, extraCanvas4Display=None, info_label=None):
         # resize picture if necessary
-        height, width, channel = image["shape"]
+        height, width, channel = photo.shape
         ratio = 1
         if max_height!=None or max_width!=None:
             if max_height==None:
@@ -22,7 +22,7 @@ class PhotoCanvas(Tkinter.Canvas):
         self.width = int(float(width)/ratio)
         self.height = int(float(height)/ratio)
         # prepare for file info display
-        self.path = image["path"]
+        self.path = photo.path
         self.info_label = info_label
         # create canvas and display image
         Tkinter.Canvas.__init__(self, parent, width=self.width, height=self.height, highlightthickness=2, relief='ridge', background='white')
