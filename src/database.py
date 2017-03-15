@@ -1,5 +1,7 @@
 import os, sys, math
 import numpy as np
+from scipy.spatial import distance
+#import sklearn
 import cv2
 import Tkinter
 
@@ -13,14 +15,26 @@ class Photo:
     - image shape
     - feature vector
     """
+    # static variables
+    sift = cv2.xfeatures2d.SIFT_create()
+
     def __init__(self, path):
-        self.img = cv2.imread(path)
+        print "Loading "+path
         self.path = path
+        self.img = cv2.imread(path)
         if self.img is not None:
             self.shape = self.img.shape
             self.size = self.img.size
+            # extract SIFT feature
+            gray = cv2.cvtColor(self.img, cv2.COLOR_BGR2GRAY)
+            keypoint, descriptors = self.sift.detectAndCompute(gray, None)
+            #kmeans = sklearn.cluster.KMeans(n_clusters=4, random_state=0).fit(descriptors)
+            #self.feature = np.squeeze(np.asarray(kmeans.cluster_centers_))
+            foo, bar, means = cv2.kmeans(descriptors, 8, None, criteria=(cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_MAX_ITER, 1, 10), attempts=1, flags=cv2.KMEANS_RANDOM_CENTERS)
+            self.feature = means.flatten()
 
     def isSimilar(self, ref, config):
+        """
         if self.shape!=ref.shape:
             return False
         if config['dist']=='l1':
@@ -34,6 +48,8 @@ class Photo:
             tkMessageBox.showinfo("Error", "Unknown distance measure: "+config['dist'])
             exit("Error: Unknown distance measure: "+config['dist'])
         return (dist<th)
+        """
+        return (distance.cosine(self.feature, ref.feature)<0.4)
 
 
 
