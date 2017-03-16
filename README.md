@@ -28,8 +28,3 @@ Prerequisites
 Execution
 ---------
 Run `python main.py` under command line environment.
-
-Wish list
----------
-- Compare rotated pictures
-- Compare photos across multiple folder
