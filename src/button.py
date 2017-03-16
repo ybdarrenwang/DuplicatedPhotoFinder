@@ -14,25 +14,19 @@ class CloseWindowButton(Tkinter.Button):
         self.pack(side=Tkinter.RIGHT, padx=5, pady=5)
 
     def close(self):
-        self.db.config['dist'] = self.config['dist'].get()
-        self.db.config['th_l1'] = self.config['th_l1'].get()
-        self.db.config['th_l2'] = self.config['th_l2'].get()
         self.root.destroy()
 
 
 class ConfigButton(Tkinter.Button):
-    """
-    This class owns the pointer to photo database configuration
+    """Configure how similarity is calculated
+    Default: Find SIFT K-Means cosine distance below SIFT_THRESH.
+    Note this class owns the pointer to photo database configuration.
     """
     def __init__(self, parent, db, r, c):
         self.db = db
-        self.config = {}
-        self.config['dist'] = Tkinter.StringVar()
-        self.config['dist'].set('l1')
-        self.config['th_l1'] = Tkinter.IntVar()
-        self.config['th_l1'].set(30)
-        self.config['th_l2'] = Tkinter.IntVar()
-        self.config['th_l2'].set(50)
+        self.db.distanceMetric = Tkinter.StringVar()
+        self.db.distanceMetric.set('sift')
+        self.db.distanceThresh = SIFT_THRESH
         Tkinter.Button.__init__(self, parent, width=BUTTON_WIDTH, text='Preference...', font=tkFont.Font(family=FONT_FAMILY, size=BUTTON_FONT_SIZE), command=self.openConfig)
         self.grid(row=r, column=c, padx=5, pady=5)
 
@@ -42,20 +36,28 @@ class ConfigButton(Tkinter.Button):
         dialog.minsize(width=DIALOG_WIDTH, height=DIALOG_HEIGHT)
         dialog.title("Preference")
         ft = tkFont.Font(family=FONT_FAMILY, size=DIALOG_FONT_SIZE)
-        opt_1 = Tkinter.Radiobutton(dialog, text="Find mean absolute difference (L1) below", font=ft, variable=self.config['dist'], value='l1')
-        if self.config['dist'].get() == 'l1':
+        # config L1 distance
+        opt_1 = Tkinter.Radiobutton(dialog, text="Find mean absolute difference (L1) below "+str(L1_THRESH), font=ft, variable=self.db.distanceMetric, value='l1')
+        if self.db.distanceMetric.get() == 'l1':
             opt_1.select()
         else:
             opt_1.deselect()
         opt_1.pack(anchor=Tkinter.W)
-        box_1 = Tkinter.Spinbox(dialog, font=ft, textvariable=self.config['th_l1'], from_=0, to=100, increment=1).pack()
-        opt_2 = Tkinter.Radiobutton(dialog, text="Find mean square difference (L2) below", font=ft, variable=self.config['dist'], value='l2')
-        if self.config['dist'].get() == 'l2':
+        # config L2 distance
+        opt_2 = Tkinter.Radiobutton(dialog, text="Find mean square difference (L2) below "+str(L2_THRESH), font=ft, variable=self.db.distanceMetric, value='l2')
+        if self.db.distanceMetric.get() == 'l2':
             opt_2.select()
         else:
             opt_2.deselect()
         opt_2.pack(anchor=Tkinter.W)
-        box_2 = Tkinter.Spinbox(dialog, font=ft, textvariable=self.config['th_l2'], from_=0, to=100, increment=1).pack()
+        # config SIFT K-Means cosine distance
+        opt_3 = Tkinter.Radiobutton(dialog, text="Find SIFT K-Means cosine distance below "+str(SIFT_THRESH), font=ft, variable=self.db.distanceMetric, value='sift')
+        if self.db.distanceMetric.get() == 'sift':
+            opt_3.select()
+        else:
+            opt_3.deselect()
+        opt_3.pack(anchor=Tkinter.W)
+        # close window button
         close_button = CloseWindowButton(dialog, self.db, self.config)
 
 

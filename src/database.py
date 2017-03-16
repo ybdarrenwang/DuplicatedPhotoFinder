@@ -1,13 +1,11 @@
 import os, sys, math
 import numpy as np
 from scipy.spatial import distance
-#import sklearn
 import cv2
-import Tkinter
+import Tkinter, tkMessageBox
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
-
 
 class Photo:
     """Object that maintains 
@@ -25,37 +23,34 @@ class Photo:
         if self.img is not None:
             self.shape = self.img.shape
             self.size = self.img.size
-            # extract SIFT feature
             gray = cv2.cvtColor(self.img, cv2.COLOR_BGR2GRAY)
-            keypoint, descriptors = self.sift.detectAndCompute(gray, None)
-            #kmeans = sklearn.cluster.KMeans(n_clusters=4, random_state=0).fit(descriptors)
-            #self.feature = np.squeeze(np.asarray(kmeans.cluster_centers_))
-            foo, bar, means = cv2.kmeans(descriptors, 8, None, criteria=(cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_MAX_ITER, 1, 10), attempts=1, flags=cv2.KMEANS_RANDOM_CENTERS)
-            self.feature = means.flatten()
+            keypoint, self.feature = self.sift.detectAndCompute(gray, None)
 
-    def isSimilar(self, ref, config):
-        """
+    def isSimilar(self, ref, distanceMetric, distanceThresh):
         if self.shape!=ref.shape:
             return False
-        if config['dist']=='l1':
+        if distanceMetric=='l1':
             dist = cv2.norm(self.img, ref.img, cv2.NORM_L1)/self.size # average absolute difference, threshold=30
-            th = config['th_l1']
-        elif config['dist']=='l2':
+        elif distanceMetric=='l2':
             dist = cv2.norm(self.img, ref.img, cv2.NORM_L2)
             dist = math.sqrt(dist*dist/self.size) # Euclidean distance, threshold=0.01
-            th = config['th_l2']
+        elif distanceMetric=='sift':
+            compactness,labels,centers = cv2.kmeans(np.concatenate((self.feature,ref.feature)), 16, None, criteria=(cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_MAX_ITER, 1, 10), attempts=1, flags=cv2.KMEANS_PP_CENTERS)
+            hist1 = [0 for i in range(16)]
+            hist2 = [0 for i in range(16)]
+            for l in labels[:len(self.feature)]: hist1[l]+=1
+            for l in labels[len(self.feature):]: hist2[l]+=1
+            dist = distance.cosine(hist1, hist2)
         else:
-            tkMessageBox.showinfo("Error", "Unknown distance measure: "+config['dist'])
+            tkMessageBox.showinfo("Error", "Unknown distance measure: "+distanceMetric)
             exit("Error: Unknown distance measure: "+config['dist'])
-        return (dist<th)
-        """
-        return (distance.cosine(self.feature, ref.feature)<0.4)
-
+        return (dist<distanceThresh)
 
 
 class Database:
     # static variables
-    config = {'dist':'l1', 'th_l1':30, 'th_l2':50}
+    distanceMetric = None
+    distanceThresh = None
     crawler = None
     duplicated_batch = []
 
@@ -79,7 +74,7 @@ class Database:
         for photo_file in os.popen("ls %s/*" % path).read().splitlines():
             p = Photo(photo_file)
             if p.img is not None:
-                if not self.duplicated_batch or p.isSimilar(self.duplicated_batch[-1], self.config):
+                if not self.duplicated_batch or p.isSimilar(self.duplicated_batch[-1], self.distanceMetric.get(), self.distanceThresh):
                     self.duplicated_batch.append(p)
                 else:
                     if len(self.duplicated_batch)>1:
