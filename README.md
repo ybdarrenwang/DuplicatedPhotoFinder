@@ -1,6 +1,8 @@
 Duplicated Photo Finder
 =======================
-This application is for finding and removing (not yet implemented) similare photos the user has taken consecutively. For now it is assumed that the file names of the photos follow chronological order, and this application only checks if adjacent photos are duplicates.
+Find, browse and manually remove similare photos in a folder.
+
+Note for now the use case scenario is assumed to be that, the user takes similar photos consecutively for later choose and edit purpose. Therefore this application only checks if adjacent photos are duplicates.
 
 The user can choose between the 3 below as the measure of image difference:
 1. SIFT & K-Means based cosine distance (default)
