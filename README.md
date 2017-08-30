@@ -2,9 +2,9 @@ Duplicated Photo Finder
 =======================
 Find, browse and manually remove similare photos in a folder.
 
-Note for now the use case scenario is assumed to be that, the user takes similar photos consecutively for later choose and edit purpose. Therefore this application only checks if adjacent photos are duplicates.
+Note for now the algorithm only checks if adjcent photos are duplicates. The use case is when someone has taken similar photos consecutively for later choose and edit purpose.
 
-The user can choose between the 3 below as the measure of image difference:
+One can choose between the 3 below as the measure of image difference:
 1. SIFT & K-Means based cosine distance (default)
 2. Mean absolute difference
 3. Mean square difference
