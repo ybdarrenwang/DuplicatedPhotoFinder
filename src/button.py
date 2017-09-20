@@ -1,4 +1,4 @@
-import os, re
+import os
 import Tkinter, tkFont, tkFileDialog, tkMessageBox
 from canvas import PhotoCanvas
 from config import *
@@ -20,8 +20,8 @@ class OpenFolderButton(Tkinter.Button):
         self.grid(row=r, column=c, padx=5, pady=5)
 
     def askdirectory(self, options, next_batch_button):
-        path = re.escape(tkFileDialog.askdirectory(**options))
-        self.db.setCrawler(path)
+        path = tkFileDialog.askdirectory(**options)
+        self.db.load(path)
         next_batch_button.getNextDuplicatedBatch()
 
 class NextBatchButton(Tkinter.Button):
@@ -65,7 +65,7 @@ class NextBatchButton(Tkinter.Button):
             self.photo_info.pack_forget()
             self.button_delete.pack_forget()
             # fetch next batch
-            copies = self.db.next()
+            copies = self.db.getNextDuplicatedBatch()
             # show the first photo in selected_photo_frame
             self.cv4display.append(PhotoCanvas(copies[0], self.selected_photo_frame, DISPLAY_HEIGHT, DISPLAY_WIDTH))
             # show duplicated photo thumbs in batch_photo_frame
@@ -117,9 +117,9 @@ class DeletePhotoButton(Tkinter.Button):
 
 
 class ConfigButton(Tkinter.Button):
-    """Configure how similarity is calculated
-    Default: Find SIFT K-Means cosine distance below SIFT_THRESH.
-    Note this class owns the pointer to photo database configuration.
+    """
+    This class owns the pointer to photo database, through which the
+    configuration of clustering algorithm can be modified.
     """
     def __init__(self, parent, db, r, c):
         self.db = db

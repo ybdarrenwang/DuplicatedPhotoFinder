@@ -1,4 +1,4 @@
-import os, sys, math
+import os, sys, re, math
 import numpy as np
 from scipy.spatial import distance
 import cv2
@@ -8,12 +8,14 @@ reload(sys)
 sys.setdefaultencoding('utf-8')
 
 class Photo:
-    """Object that maintains 
-    - photo file path
-    - image shape
-    - feature vector
     """
-    # static variables
+    Object that maintains 
+    - Photo file path (self.path)
+    - CV2 image object (self.img)
+    - Image shape (self.shape)
+    - Image size (self.size)
+    - SIFT feature vector (self.feature)
+    """
     sift = cv2.xfeatures2d.SIFT_create()
 
     def __init__(self, path):
@@ -48,7 +50,11 @@ class Photo:
 
 
 class Database:
-    # static variables
+    """
+    This class owns the list of photo objects, photo clustering algorithm, and
+    the generator for emitting duplicated photo batches. Note the
+    parameters can be set by ConfigButton class object.
+    """
     distanceMetric = None
     distanceThresh = None
     crawler = None
@@ -57,13 +63,15 @@ class Database:
     def __init__(self):
         pass
 
-    def setCrawler(self, path):
+    def load(self, path):
+        self.crawler = None
         if path:
             self.crawler = self.duplicatedPhotoGenerator(path)
             self.duplicated_batch = []
 
-    def next(self):
-        return self.crawler.next()
+    def getNextDuplicatedBatch(self):
+        if self.crawler is not None:
+            return self.crawler.next()
 
     def duplicatedPhotoGenerator(self, path):
         """ Return an array with each element being similar Photo objects
@@ -71,7 +79,7 @@ class Database:
         - cache duplicated_batch if found
         - yield group of duplicated_batch
         """
-        for photo_file in os.popen("ls %s/*" % path).read().splitlines():
+        for photo_file in os.popen("ls %s/*" % re.escape(path)).read().splitlines():
             p = Photo(photo_file)
             if p.img is not None:
                 if not self.duplicated_batch or p.isSimilar(self.duplicated_batch[-1], self.distanceMetric.get(), self.distanceThresh):
