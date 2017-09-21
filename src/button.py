@@ -123,9 +123,9 @@ class ConfigButton(Tkinter.Button):
     """
     def __init__(self, parent, db, r, c):
         self.db = db
-        self.db.distanceMetric = Tkinter.StringVar()
-        self.db.distanceMetric.set('sift')
-        self.db.distanceThresh = SIFT_THRESH
+        self.db.DIST_METRIC = Tkinter.StringVar()
+        self.db.DIST_METRIC.set('sift')
+        self.db.DIST_THRESH = SIFT_THRESH
         Tkinter.Button.__init__(self, parent, width=BUTTON_WIDTH, text='Preference...', font=tkFont.Font(family=FONT_FAMILY, size=BUTTON_FONT_SIZE), command=self.openConfig)
         self.grid(row=r, column=c, padx=5, pady=5)
 
@@ -136,22 +136,22 @@ class ConfigButton(Tkinter.Button):
         dialog.title("Preference")
         ft = tkFont.Font(family=FONT_FAMILY, size=DIALOG_FONT_SIZE)
         # config L1 distance
-        opt_1 = Tkinter.Radiobutton(dialog, text="Find mean absolute difference (L1) below "+str(L1_THRESH), font=ft, variable=self.db.distanceMetric, value='l1')
-        if self.db.distanceMetric.get() == 'l1':
+        opt_1 = Tkinter.Radiobutton(dialog, text="Find mean absolute difference (L1) below "+str(L1_THRESH), font=ft, variable=self.db.DIST_METRIC, value='l1')
+        if self.db.DIST_METRIC.get() == 'l1':
             opt_1.select()
         else:
             opt_1.deselect()
         opt_1.pack(anchor=Tkinter.W)
         # config L2 distance
-        opt_2 = Tkinter.Radiobutton(dialog, text="Find mean square difference (L2) below "+str(L2_THRESH), font=ft, variable=self.db.distanceMetric, value='l2')
-        if self.db.distanceMetric.get() == 'l2':
+        opt_2 = Tkinter.Radiobutton(dialog, text="Find mean square difference (L2) below "+str(L2_THRESH), font=ft, variable=self.db.DIST_METRIC, value='l2')
+        if self.db.DIST_METRIC.get() == 'l2':
             opt_2.select()
         else:
             opt_2.deselect()
         opt_2.pack(anchor=Tkinter.W)
         # config SIFT K-Means cosine distance
-        opt_3 = Tkinter.Radiobutton(dialog, text="Find SIFT K-Means cosine distance below "+str(SIFT_THRESH), font=ft, variable=self.db.distanceMetric, value='sift')
-        if self.db.distanceMetric.get() == 'sift':
+        opt_3 = Tkinter.Radiobutton(dialog, text="Find SIFT K-Means cosine distance below "+str(SIFT_THRESH), font=ft, variable=self.db.DIST_METRIC, value='sift')
+        if self.db.DIST_METRIC.get() == 'sift':
             opt_3.select()
         else:
             opt_3.deselect()

@@ -28,26 +28,6 @@ class Photo:
             gray = cv2.cvtColor(self.img, cv2.COLOR_BGR2GRAY)
             keypoint, self.feature = self.sift.detectAndCompute(gray, None)
 
-    def isSimilar(self, ref, distanceMetric, distanceThresh):
-        if self.shape!=ref.shape:
-            return False
-        if distanceMetric=='l1':
-            dist = cv2.norm(self.img, ref.img, cv2.NORM_L1)/self.size # average absolute difference, threshold=30
-        elif distanceMetric=='l2':
-            dist = cv2.norm(self.img, ref.img, cv2.NORM_L2)
-            dist = math.sqrt(dist*dist/self.size) # Euclidean distance, threshold=0.01
-        elif distanceMetric=='sift':
-            compactness,labels,centers = cv2.kmeans(np.concatenate((self.feature,ref.feature)), 16, None, criteria=(cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_MAX_ITER, 1, 10), attempts=1, flags=cv2.KMEANS_PP_CENTERS)
-            hist1 = [0 for i in range(16)]
-            hist2 = [0 for i in range(16)]
-            for l in labels[:len(self.feature)]: hist1[l]+=1
-            for l in labels[len(self.feature):]: hist2[l]+=1
-            dist = distance.cosine(hist1, hist2)
-        else:
-            tkMessageBox.showinfo("Error", "Unknown distance measure: "+distanceMetric)
-            exit("Error: Unknown distance measure: "+config['dist'])
-        return (dist<distanceThresh)
-
 
 class Database:
     """
@@ -55,8 +35,8 @@ class Database:
     the generator for emitting duplicated photo batches. Note the
     parameters can be set by ConfigButton class object.
     """
-    distanceMetric = None
-    distanceThresh = None
+    DIST_METRIC = None
+    DIST_THRESH = None
     crawler = None
     duplicated_batch = []
 
@@ -73,21 +53,44 @@ class Database:
         if self.crawler is not None:
             return self.crawler.next()
 
+    def isSimilarPhotos(self, p1, p2):
+        if p1.shape!=p2.shape:
+            return False
+        if self.DIST_METRIC.get()=='l1':
+            dist = cv2.norm(p1.img, p2.img, cv2.NORM_L1)/p1.size # average absolute difference, threshold=30
+        elif self.DIST_METRIC.get()=='l2':
+            dist = cv2.norm(p1.img, p2.img, cv2.NORM_L2)
+            dist = math.sqrt(dist*dist/p1.size) # Euclidean distance, threshold=0.01
+        elif self.DIST_METRIC.get()=='sift':
+            compactness,labels,centers = cv2.kmeans(np.concatenate((p1.feature,p2.feature)), 16, None, criteria=(cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_MAX_ITER, 1, 10), attempts=1, flags=cv2.KMEANS_PP_CENTERS)
+            hist1 = [0 for i in range(16)]
+            hist2 = [0 for i in range(16)]
+            for l in labels[:len(p1.feature)]: hist1[l]+=1
+            for l in labels[len(p1.feature):]: hist2[l]+=1
+            dist = distance.cosine(hist1, hist2)
+        else:
+            tkMessageBox.showinfo("Error", "Unknown distance measure: "+self.DIST_METRIC.get())
+            exit("Error: Unknown distance measure: "+config['dist'])
+        return (dist<self.DIST_THRESH)
+
     def duplicatedPhotoGenerator(self, path):
         """ Return an array with each element being similar Photo objects
         - iterate over all photos in path
         - cache duplicated_batch if found
         - yield group of duplicated_batch
         """
+        prev_photo = None
         for photo_file in os.popen("ls %s/*" % re.escape(path)).read().splitlines():
-            p = Photo(photo_file)
-            if p.img is not None:
-                if not self.duplicated_batch or p.isSimilar(self.duplicated_batch[-1], self.distanceMetric.get(), self.distanceThresh):
-                    self.duplicated_batch.append(p)
-                else:
-                    if len(self.duplicated_batch)>1:
-                        yield self.duplicated_batch
-                    self.duplicated_batch = [p]
+            photo = Photo(photo_file)
+            if photo.img is None:
+                continue
+            if prev_photo is not None and self.isSimilarPhotos(prev_photo, photo):
+                self.duplicated_batch.append(photo)
+            else:
+                if len(self.duplicated_batch)>1:
+                    yield self.duplicated_batch
+                self.duplicated_batch = [photo]
+            prev_photo = photo
         if len(self.duplicated_batch)>1: # the last batch
             yield self.duplicated_batch
         raise StopIteration
