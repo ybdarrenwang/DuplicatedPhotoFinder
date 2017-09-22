@@ -25,9 +25,7 @@ class Photo:
         if self.img is not None:
             self.shape = self.img.shape
             self.size = self.img.size
-            gray = cv2.cvtColor(self.img, cv2.COLOR_BGR2GRAY)
-            keypoint, self.feature = self.sift.detectAndCompute(gray, None)
-
+        self.feature = None
 
 class Database:
     """
@@ -62,6 +60,12 @@ class Database:
             dist = cv2.norm(p1.img, p2.img, cv2.NORM_L2)
             dist = math.sqrt(dist*dist/p1.size) # Euclidean distance, threshold=0.01
         elif self.DIST_METRIC.get()=='sift':
+            if p1.feature is None:
+                gray = cv2.cvtColor(p1.img, cv2.COLOR_BGR2GRAY)
+                keypoint, p1.feature = p1.sift.detectAndCompute(gray, None)
+            if p2.feature is None:
+                gray = cv2.cvtColor(p2.img, cv2.COLOR_BGR2GRAY)
+                keypoint, p2.feature = p2.sift.detectAndCompute(gray, None)
             compactness,labels,centers = cv2.kmeans(np.concatenate((p1.feature,p2.feature)), 16, None, criteria=(cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_MAX_ITER, 1, 10), attempts=1, flags=cv2.KMEANS_PP_CENTERS)
             hist1 = [0 for i in range(16)]
             hist2 = [0 for i in range(16)]
