@@ -115,12 +115,10 @@ class DeletePhotoButton(Tkinter.Button):
             del self.cv4display[0]
             del self.db.duplicated_batch[0]
 
-
+"""
 class ConfigButton(Tkinter.Button):
-    """
-    This class owns the pointer to photo database, through which the
-    configuration of clustering algorithm can be modified.
-    """
+    # This class owns the pointer to photo database, through which the
+    # configuration of clustering algorithm can be modified.
     def __init__(self, parent, db, r, c):
         self.db = db
         self.db.DIST_METRIC = Tkinter.StringVar()
@@ -158,7 +156,7 @@ class ConfigButton(Tkinter.Button):
         opt_3.pack(anchor=Tkinter.W)
         # close window button
         close_button = CloseWindowButton(dialog)
-
+"""
 
 class CloseWindowButton(Tkinter.Button):
     def __init__(self, parent):

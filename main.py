@@ -50,7 +50,7 @@ batch_photo_frame.bind("<Configure>", AuxscrollFunction)
 db = database.Database()
 
 # create buttons
-button_cfg = button.ConfigButton(root, db, 2, 3)
+#button_cfg = button.ConfigButton(root, db, 2, 3)
 button_next = button.NextBatchButton(root, batch_photo_frame, selected_photo_frame, selected_photo_info_frame, db, 2, 1)
 button_open = button.OpenFolderButton(root, batch_photo_frame, db, button_next, 2, 0)
 

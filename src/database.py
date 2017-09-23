@@ -3,6 +3,7 @@ import numpy as np
 from scipy.spatial import distance
 import cv2
 import Tkinter, tkMessageBox
+from config import *
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -33,8 +34,7 @@ class Database:
     the generator for emitting duplicated photo batches. Note the
     parameters can be set by ConfigButton class object.
     """
-    DIST_METRIC = None
-    DIST_THRESH = None
+    DIST_THRESH = SIFT_THRESH
     crawler = None
     duplicated_batch = []
 
@@ -54,27 +54,18 @@ class Database:
     def isSimilarPhotos(self, p1, p2):
         if p1.shape!=p2.shape:
             return False
-        if self.DIST_METRIC.get()=='l1':
-            dist = cv2.norm(p1.img, p2.img, cv2.NORM_L1)/p1.size # average absolute difference, threshold=30
-        elif self.DIST_METRIC.get()=='l2':
-            dist = cv2.norm(p1.img, p2.img, cv2.NORM_L2)
-            dist = math.sqrt(dist*dist/p1.size) # Euclidean distance, threshold=0.01
-        elif self.DIST_METRIC.get()=='sift':
-            if p1.feature is None:
-                gray = cv2.cvtColor(p1.img, cv2.COLOR_BGR2GRAY)
-                keypoint, p1.feature = p1.sift.detectAndCompute(gray, None)
-            if p2.feature is None:
-                gray = cv2.cvtColor(p2.img, cv2.COLOR_BGR2GRAY)
-                keypoint, p2.feature = p2.sift.detectAndCompute(gray, None)
-            compactness,labels,centers = cv2.kmeans(np.concatenate((p1.feature,p2.feature)), 16, None, criteria=(cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_MAX_ITER, 1, 10), attempts=1, flags=cv2.KMEANS_PP_CENTERS)
-            hist1 = [0 for i in range(16)]
-            hist2 = [0 for i in range(16)]
-            for l in labels[:len(p1.feature)]: hist1[l]+=1
-            for l in labels[len(p1.feature):]: hist2[l]+=1
-            dist = distance.cosine(hist1, hist2)
-        else:
-            tkMessageBox.showinfo("Error", "Unknown distance measure: "+self.DIST_METRIC.get())
-            exit("Error: Unknown distance measure: "+config['dist'])
+        if p1.feature is None:
+            gray = cv2.cvtColor(p1.img, cv2.COLOR_BGR2GRAY)
+            keypoint, p1.feature = p1.sift.detectAndCompute(gray, None)
+        if p2.feature is None:
+            gray = cv2.cvtColor(p2.img, cv2.COLOR_BGR2GRAY)
+            keypoint, p2.feature = p2.sift.detectAndCompute(gray, None)
+        compactness,labels,centers = cv2.kmeans(np.concatenate((p1.feature,p2.feature)), 16, None, criteria=(cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_MAX_ITER, 1, 10), attempts=1, flags=cv2.KMEANS_PP_CENTERS)
+        hist1 = [0 for i in range(16)]
+        hist2 = [0 for i in range(16)]
+        for l in labels[:len(p1.feature)]: hist1[l]+=1
+        for l in labels[len(p1.feature):]: hist2[l]+=1
+        dist = distance.cosine(hist1, hist2)
         return (dist<self.DIST_THRESH)
 
     def duplicatedPhotoGenerator(self, path):
