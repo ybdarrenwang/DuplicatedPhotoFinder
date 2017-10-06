@@ -47,7 +47,7 @@ class NextBatchButton(Tkinter.Button):
         self.button_delete = DeletePhotoButton(selected_photo_info_frame, self.db, self.cv4display)
         self.button_delete.pack_forget() # hide delete button whenever photo is absent
         # create self
-        Tkinter.Button.__init__(self, parent, width=BUTTON_WIDTH, text='Find duplicates', font=tkFont.Font(family=FONT_FAMILY, size=BUTTON_FONT_SIZE), command=lambda:self.getNextDuplicatedBatch())
+        Tkinter.Button.__init__(self, parent, width=BUTTON_WIDTH, text='Next batch', font=tkFont.Font(family=FONT_FAMILY, size=BUTTON_FONT_SIZE), command=lambda:self.getNextDuplicatedBatch())
         self.grid(row=r, column=c, padx=5, pady=5)
         # set display frames
         self.batch_photo_frame = batch_photo_frame

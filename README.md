@@ -2,7 +2,7 @@ Duplicated Photo Finder
 =======================
 Find, browse and manually remove similare photos in a folder.
 
-Note the algorithm only checks if adjcent photos are duplicates. The use case is when someone has taken similar photos consecutively for later choose and edit purpose.
+It is assumed that the filenames follow chronological order, and the algorithm only checks whether adjcent photos are highly similar. The use case is when someone has taken similar photos consecutively for later choose and edit purpose.
 
 Platforms tested
 ----------------

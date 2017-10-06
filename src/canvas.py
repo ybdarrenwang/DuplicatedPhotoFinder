@@ -50,7 +50,7 @@ class PhotoCanvas(Tkinter.Canvas):
         self.isSelected = True
         info = '\n'.join(["File name:", self.path.split('/')[-1],'',
                           "File size (kB):", str(round(float(os.stat(self.path).st_size)/1000, 1)),'',
-                          "Last modified:", str(datetime.datetime.fromtimestamp(os.stat(self.path).st_mtime))])
+                          "Last modified:", str(datetime.datetime.fromtimestamp(os.stat(self.path).st_mtime)).split('.')[0]])
         self.info_label.configure(text=info)
         if extraCanvas4Display!=None:
             extraCanvas4Display.loadImages(self.path)
