@@ -75,7 +75,11 @@ class Database:
         - yield group of duplicated_batch
         """
         prev_photo = None
-        for photo_file in os.popen("ls %s/*" % re.escape(path)).read().splitlines():
+        self.progress_bar.start()
+        total_num_files = len(os.popen("ls %s/*" % re.escape(path)).read().splitlines())
+        for idx, photo_file in enumerate(os.popen("ls %s/*" % re.escape(path)).read().splitlines()):
+            self.progress_bar["value"] = 100.0*idx/total_num_files
+            self.progress_bar.update()
             photo = Photo(photo_file)
             if photo.img is None:
                 continue
@@ -83,9 +87,12 @@ class Database:
                 self.duplicated_batch.append(photo)
             else:
                 if len(self.duplicated_batch)>1:
+                    self.progress_bar.stop()
                     yield self.duplicated_batch
+                    self.progress_bar.start()
                 self.duplicated_batch = [photo]
             prev_photo = photo
+        self.progress_bar.stop()
         if len(self.duplicated_batch)>1: # the last batch
             yield self.duplicated_batch
         raise StopIteration
