@@ -1,4 +1,4 @@
-import sys, Tkinter, tkFont
+import sys, Tkinter, tkFont, ttk
 sys.path.insert(0, "./src/")
 import button, database
 from config import *
@@ -46,8 +46,10 @@ bg_canvas.create_window((0,0),window=batch_photo_frame,anchor='nw')
 batch_photo_frame.bind("<Configure>", AuxscrollFunction)
 # Note: don't pack batch_photo_frame here, otherwise scroll bar won't show!!!
 
-# create photo database
-db = database.Database()
+# create photo database and loading progress bar
+progress_bar = ttk.Progressbar(root, orient=Tkinter.HORIZONTAL, length=PROGRESS_BAR_LENGTH, mode='determinate')
+progress_bar.grid(row=2, column=2, columnspan=2)
+db = database.Database(progress_bar)
 
 # create buttons
 #button_cfg = button.ConfigButton(root, db, 2, 3)

@@ -38,8 +38,8 @@ class Database:
     crawler = None
     duplicated_batch = []
 
-    def __init__(self):
-        pass
+    def __init__(self, progress_bar):
+        self.progress_bar = progress_bar
 
     def load(self, path):
         self.crawler = None
