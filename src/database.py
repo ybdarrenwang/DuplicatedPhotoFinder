@@ -52,8 +52,6 @@ class Database:
             return self.crawler.next()
 
     def isSimilarPhotos(self, p1, p2):
-        if p1.shape!=p2.shape:
-            return False
         if p1.feature is None:
             gray = cv2.cvtColor(p1.img, cv2.COLOR_BGR2GRAY)
             keypoint, p1.feature = p1.sift.detectAndCompute(gray, None)
