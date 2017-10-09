@@ -20,7 +20,6 @@ class Photo:
     sift = cv2.xfeatures2d.SIFT_create()
 
     def __init__(self, path):
-        print "Loading "+path
         self.path = path
         self.img = cv2.imread(path)
         if self.img is not None:
@@ -61,8 +60,8 @@ class Database:
         compactness,labels,centers = cv2.kmeans(np.concatenate((p1.feature,p2.feature)), 16, None, criteria=(cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_MAX_ITER, 1, 10), attempts=1, flags=cv2.KMEANS_PP_CENTERS)
         hist1 = [0 for i in range(16)]
         hist2 = [0 for i in range(16)]
-        for l in labels[:len(p1.feature)]: hist1[l]+=1
-        for l in labels[len(p1.feature):]: hist2[l]+=1
+        for l in labels[:len(p1.feature), 0]: hist1[l]+=1
+        for l in labels[len(p1.feature):, 0]: hist2[l]+=1
         dist = distance.cosine(hist1, hist2)
         return (dist<self.DIST_THRESH)
 

@@ -20,6 +20,7 @@ Tkinter.Grid.columnconfigure(root, 3, weight=0)
 Tkinter.Grid.rowconfigure(root, 0, weight=1)
 Tkinter.Grid.rowconfigure(root, 1, weight=1)
 Tkinter.Grid.rowconfigure(root, 2, weight=0)
+Tkinter.Grid.rowconfigure(root, 3, weight=0)
 
 # create frame for displaying selected photo
 selected_photo_frame = Tkinter.Frame(root, height=DISPLAY_HEIGHT, width=DISPLAY_WIDTH)
