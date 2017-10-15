@@ -9,26 +9,16 @@ class PhotoCanvas(Tkinter.Canvas):
     Note: will resize the image based on display_height
     """
     def __init__(self, photo, parent, max_height=None, max_width=None, extraCanvas4Display=None, info_label=None):
-        # resize picture if necessary
-        height, width, channel = photo.shape
-        ratio = 1
-        if max_height!=None or max_width!=None:
-            if max_height==None:
-                ratio = float(width)/max_width
-            elif max_width==None:
-                ratio = float(height)/max_height
-            else:
-                ratio = max(float(height)/max_height, float(width)/max_width)
-        self.width = int(float(width)/ratio)
-        self.height = int(float(height)/ratio)
         # prepare for file info display
-        self.path = photo.path
+        self.photo = photo
         self.info_label = info_label
+        self.max_height = max_height
+        self.max_width = max_width
         # create canvas and display image
-        Tkinter.Canvas.__init__(self, parent, width=self.width, height=self.height, highlightthickness=2, relief='ridge', background='white')
+        Tkinter.Canvas.__init__(self, parent, width=max_width, height=max_height, highlightthickness=2, relief='ridge', background='white')
         self.img = [None] # cache of Tkinter canvas image
         self.thumb = [None] # cache of Python image object
-        self.loadImages(self.path)
+        self.loadImages(self.photo)
         # prepare for highlight upon click
         self.default_color = self.cget("bg")
         self.competing_canvas = []
@@ -48,15 +38,29 @@ class PhotoCanvas(Tkinter.Canvas):
             cv.isSelected = False
         self.configure(highlightbackground="red", highlightcolor="red")
         self.isSelected = True
-        info = '\n'.join(["File name:", self.path.split('/')[-1],'',
-                          "File size (kB):", str(round(float(os.stat(self.path).st_size)/1000, 1)),'',
-                          "Last modified:", str(datetime.datetime.fromtimestamp(os.stat(self.path).st_mtime)).split('.')[0]])
+        info = '\n'.join(["File name:", self.photo.path.split('/')[-1],'',
+                          "File size (kB):", str(round(float(os.stat(self.photo.path).st_size)/1000, 1)),'',
+                          "Last modified:", str(datetime.datetime.fromtimestamp(os.stat(self.photo.path).st_mtime)).split('.')[0]])
         self.info_label.configure(text=info)
         if extraCanvas4Display!=None:
-            extraCanvas4Display.loadImages(self.path)
+            extraCanvas4Display.loadImages(self.photo)
 
-    def loadImages(self, image):
-        tmp = Image.open(image).resize((self.width, self.height), Image.ANTIALIAS)
+    def loadImages(self, photo):
+        # resize canvas if necessary
+        height, width, channel = photo.shape
+        ratio = 1
+        if self.max_height!=None or self.max_width!=None:
+            if self.max_height==None:
+                ratio = float(width)/self.max_width
+            elif self.max_width==None:
+                ratio = float(height)/self.max_height
+            else:
+                ratio = max(float(height)/self.max_height, float(width)/self.max_width)
+        self.width = int(float(width)/ratio)
+        self.height = int(float(height)/ratio)
+        self.config(width=self.width, height=self.height)
+        # load image
+        tmp = Image.open(photo.path).resize((self.width, self.height), Image.ANTIALIAS)
         self.thumb[0] = ImageTk.PhotoImage(tmp)
         if self.img[0]==None:
             self.img[0] = self.create_image(0, 0, image = self.thumb[0], anchor='nw')
