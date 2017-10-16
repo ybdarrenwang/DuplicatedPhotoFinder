@@ -25,3 +25,8 @@ Prerequisites
 Execution
 ---------
 Run `python main.py` under command line environment.
+
+Known issues
+------------
+1. Randomness in K-means algorithm would make distance of same pair of photos different for each run.
+2. Rotated photos would be displayed in original shape.

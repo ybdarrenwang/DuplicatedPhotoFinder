@@ -7,8 +7,10 @@ from send2trash import send2trash
 
 
 class OpenFolderButton(Tkinter.Button):
-    """
-    This class owns the pointer to photo database folder path
+    """ Load photos from a folder into database.
+
+    # Member objects
+        db: Database object (c.f. database.py).
     """
     def __init__(self, parent, frame, db, next_batch_button, r, c):
         self.db = db
@@ -24,22 +26,21 @@ class OpenFolderButton(Tkinter.Button):
         self.db.load(path)
         next_batch_button.getNextDuplicatedBatch()
 
+
 class NextBatchButton(Tkinter.Button):
-    """
-    Note: this class owns
-    1) canvases to display photos
-    2) photo info label
-    3) delete photo button
+    """ Change display to next batch of duplicated photos.
+
+    # Member objects
+        db: Database object (c.f. database.py).
+        cv4display: A list of canvases; cv4display[0] display the selected photo, others are photo thumbs.
+        photo_into: A Tkinter Label object for displaying photo file name, last modified time et. al.
+        button_delete: A Tkinter Button object for moving photo file to recycle bin.
+        batch_photo_frame: A Tkinter Frame object to display the thumbs of all duplicated photos.
+        selected_photo_frame: A Tkinter Frame object to display the 1 selected photo.
     """
     def __init__(self, parent, batch_photo_frame, selected_photo_frame, selected_photo_info_frame, db, r, c):
-        """
-        batch_photo_frame: to display the thumbs of all duplicated photos
-        selected_photo_frame: to display the selected photo
-        selected_photo_label: to display the file info of selected photo
-        cv4display: a list of canvases; cv4display[0] display the selected photo, others are photo thumbs.
-        """
-        self.cv4display = []
         self.db = db
+        self.cv4display = []
         # create photo info label and delete photo button
         self.photo_info = Tkinter.Label(selected_photo_info_frame, height=NUM_INFO_LINE, font=tkFont.Font(family=FONT_FAMILY, size=DIALOG_FONT_SIZE), background="white")
         self.photo_info.pack(expand=True, padx=5, pady=5)
@@ -83,8 +84,11 @@ class NextBatchButton(Tkinter.Button):
 
 
 class DeletePhotoButton(Tkinter.Button):
-    """
-    cv4display: a list of canvases; cv4display[0] display the selected photo, others are photo thumbs.
+    """ Move photo file to recycle bin.
+
+    # Member objects
+        db: Database object (c.f. database.py).
+        cv4display: A list of canvases; cv4display[0] display the selected photo, others are photo thumbs.
     """
     def __init__(self, parent, db, cv4display):
         self.db = db
@@ -156,7 +160,7 @@ class ConfigButton(Tkinter.Button):
         opt_3.pack(anchor=Tkinter.W)
         # close window button
         close_button = CloseWindowButton(dialog)
-"""
+
 
 class CloseWindowButton(Tkinter.Button):
     def __init__(self, parent):
@@ -166,3 +170,4 @@ class CloseWindowButton(Tkinter.Button):
 
     def close(self):
         self.root.destroy()
+"""

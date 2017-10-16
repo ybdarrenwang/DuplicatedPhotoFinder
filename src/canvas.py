@@ -3,21 +3,32 @@ import Tkinter, Tkconstants, tkMessageBox
 from PIL import Image, ImageTk
 
 class PhotoCanvas(Tkinter.Canvas):
-    """
-    extraCanvas4Display: upon clicked, display image on this canvas as well
-    competingCanvasList: upon clicked, remove highlights on these canvases
-    Note: will resize the image based on display_height
+    """ Display photo object, interact with mouse click, and control other
+    canvases when necessary.
+
+    # Member objects
+        photo: An Photo object (c.f. database.py).
+        info_label: Texts to display when selected.
+        max_height: Maximum height of display.
+        max_width: Maximum width of display.
+        img: Cache of Tkinter canvas image.
+        thumb: Cache of Python image object.
+        default_color: Boarder color when not selected.
+        competing_canvas: Upon clicked, remove highlights on these canvases.
+        is_selected: True when this canvas is selected by mouse click; false
+                     otherwise.
     """
     def __init__(self, photo, parent, max_height=None, max_width=None, extraCanvas4Display=None, info_label=None):
+        """ extraCanvas4Display: upon clicked, display image on this canvas as well. """
         # prepare for file info display
         self.photo = photo
         self.info_label = info_label
         self.max_height = max_height
         self.max_width = max_width
-        # create canvas and display image
+        # create canvas, cache and display image
         Tkinter.Canvas.__init__(self, parent, width=max_width, height=max_height, highlightthickness=2, relief='ridge', background='white')
-        self.img = [None] # cache of Tkinter canvas image
-        self.thumb = [None] # cache of Python image object
+        self.img = [None]
+        self.thumb = [None]
         self.loadImages(self.photo)
         # prepare for highlight upon click
         self.default_color = self.cget("bg")
@@ -27,17 +38,18 @@ class PhotoCanvas(Tkinter.Canvas):
         else:
             self.bind("<Button-1>", lambda event: self.highlight(extraCanvas4Display))
             self.pack(side=Tkinter.LEFT)
-        self.isSelected = False
+        self.is_selected = False
 
     def setCompetingCanvases(self, competingCanvasList):
         self.competing_canvas = competingCanvasList
 
     def highlight(self, extraCanvas4Display=None):
+        """ extraCanvas4Display: upon clicked, display image on this canvas as well. """
         for cv in self.competing_canvas:
             cv.configure(highlightbackground=cv.default_color, highlightcolor=cv.default_color)
-            cv.isSelected = False
+            cv.is_selected = False
         self.configure(highlightbackground="red", highlightcolor="red")
-        self.isSelected = True
+        self.is_selected = True
         info = '\n'.join(["File name:", self.photo.path.split('/')[-1],'',
                           "File size (kB):", str(round(float(os.stat(self.photo.path).st_size)/1000, 1)),'',
                           "Last modified:", str(datetime.datetime.fromtimestamp(os.stat(self.photo.path).st_mtime)).split('.')[0]])
