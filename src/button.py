@@ -33,7 +33,7 @@ class NextBatchButton(Tkinter.Button):
     # Member objects
         db: Database object (c.f. database.py).
         cv4display: A list of canvases; cv4display[0] display the selected photo, others are photo thumbs.
-        photo_into: A Tkinter Label object for displaying photo file name, last modified time et. al.
+        photo_into: A Tkinter Label object for displaying photo file name, size, and last modified time.
         button_delete: A Tkinter Button object for moving photo file to recycle bin.
         batch_photo_frame: A Tkinter Frame object to display the thumbs of all duplicated photos.
         selected_photo_frame: A Tkinter Frame object to display the 1 selected photo.

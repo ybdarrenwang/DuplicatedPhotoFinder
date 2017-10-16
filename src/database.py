@@ -1,4 +1,4 @@
-import os, sys, re, math
+import os, sys, re, math, datetime
 import numpy as np
 from scipy.spatial import distance
 import cv2
@@ -16,6 +16,7 @@ class Photo:
         img: CV2 image object.
         shape: Image shape.
         size: Image size.
+        info: A string of photo file info (file name, size, last modified time).
         feature: Feature vector.
     """
     def __init__(self, path):
@@ -24,9 +25,13 @@ class Photo:
         if self.img is not None:
             self.shape = self.img.shape
             self.size = self.img.size
+            self.info = '\n'.join(["File name:", self.path.split('/')[-1],'',
+                                   "File size (kB):", str(round(float(os.stat(self.path).st_size)/1000, 1)),'',
+                                   "Last modified:", str(datetime.datetime.fromtimestamp(os.stat(self.path).st_ctime)).split('.')[0]])
         else:
             self.shape = None
             self.size = None
+            self.info = ""
         self.feature = None
 
 

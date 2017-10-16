@@ -1,4 +1,3 @@
-import os, datetime
 import Tkinter, Tkconstants, tkMessageBox
 from PIL import Image, ImageTk
 
@@ -50,10 +49,7 @@ class PhotoCanvas(Tkinter.Canvas):
             cv.is_selected = False
         self.configure(highlightbackground="red", highlightcolor="red")
         self.is_selected = True
-        info = '\n'.join(["File name:", self.photo.path.split('/')[-1],'',
-                          "File size (kB):", str(round(float(os.stat(self.photo.path).st_size)/1000, 1)),'',
-                          "Last modified:", str(datetime.datetime.fromtimestamp(os.stat(self.photo.path).st_mtime)).split('.')[0]])
-        self.info_label.configure(text=info)
+        self.info_label.configure(text=self.photo.info)
         if extraCanvas4Display!=None:
             extraCanvas4Display.loadImages(self.photo)
 
