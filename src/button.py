@@ -101,11 +101,11 @@ class DeletePhotoButton(Tkinter.Button):
             tkMessageBox.showinfo("Warning", "No more photos from this batch!")
             return
         for i in range(len(self.db.duplicated_batch)):
-            if self.cv4display[i+1].isSelected:
+            if self.cv4display[i+1].is_selected:
                 self.cv4display[i+1].info_label.configure(text='')
                 self.cv4display[i+1].destroy()
                 del self.cv4display[i+1]
-                send2trash(self.db.duplicated_batch[i]['path'])
+                send2trash(self.db.duplicated_batch[i].path)
                 del self.db.duplicated_batch[i]
                 break
         if len(self.cv4display)>1:

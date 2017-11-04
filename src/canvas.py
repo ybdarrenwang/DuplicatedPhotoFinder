@@ -16,6 +16,7 @@ class PhotoCanvas(Tkinter.Canvas):
         competing_canvas: Upon clicked, remove highlights on these canvases.
         is_selected: True when this canvas is selected by mouse click; false
                      otherwise.
+        extraCanvas4Display: An additional canvas object for displaying image upon click
     """
     def __init__(self, photo, parent, max_height=None, max_width=None, extraCanvas4Display=None, info_label=None):
         """ extraCanvas4Display: upon clicked, display image on this canvas as well. """
@@ -32,17 +33,18 @@ class PhotoCanvas(Tkinter.Canvas):
         # prepare for highlight upon click
         self.default_color = self.cget("bg")
         self.competing_canvas = []
-        if extraCanvas4Display==None:
+        self.extraCanvas4Display = extraCanvas4Display
+        if self.extraCanvas4Display==None:
             self.pack()
         else:
-            self.bind("<Button-1>", lambda event: self.highlight(extraCanvas4Display))
+            self.bind("<Button-1>", lambda event: self.highlight())
             self.pack(side=Tkinter.LEFT)
         self.is_selected = False
 
     def setCompetingCanvases(self, competingCanvasList):
         self.competing_canvas = competingCanvasList
 
-    def highlight(self, extraCanvas4Display=None):
+    def highlight(self):
         """ extraCanvas4Display: upon clicked, display image on this canvas as well. """
         for cv in self.competing_canvas:
             cv.configure(highlightbackground=cv.default_color, highlightcolor=cv.default_color)
@@ -50,8 +52,8 @@ class PhotoCanvas(Tkinter.Canvas):
         self.configure(highlightbackground="red", highlightcolor="red")
         self.is_selected = True
         self.info_label.configure(text=self.photo.info)
-        if extraCanvas4Display!=None:
-            extraCanvas4Display.loadImages(self.photo)
+        if self.extraCanvas4Display!=None:
+            self.extraCanvas4Display.loadImages(self.photo)
 
     def loadImages(self, photo):
         # resize canvas if necessary

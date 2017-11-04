@@ -94,7 +94,7 @@ class Database:
     def duplicatedPhotoGenerator(self, path):
         """ Iterate over all photos in directory. Yield similar photos as an array of Photo objects. """
         prev_photo = None
-        duplicated_batch = []
+        self.duplicated_batch = []
         self.progress_bar.start()
         total_num_files = len(os.popen("ls %s/*" % re.escape(path)).read().splitlines())
         for idx, photo_file in enumerate(os.popen("ls %s/*" % re.escape(path)).read().splitlines()):
@@ -104,15 +104,15 @@ class Database:
             if photo.img is None:
                 continue
             if prev_photo is not None and self.isSimilarPhotos(prev_photo, photo):
-                duplicated_batch.append(photo)
+                self.duplicated_batch.append(photo)
             else:
-                if len(duplicated_batch)>1:
+                if len(self.duplicated_batch)>1:
                     self.progress_bar.stop()
-                    yield duplicated_batch
+                    yield self.duplicated_batch
                     self.progress_bar.start()
-                duplicated_batch = [photo]
+                self.duplicated_batch = [photo]
             prev_photo = photo
         self.progress_bar.stop()
-        if len(duplicated_batch)>1: # the last batch
-            yield duplicated_batch
+        if len(self.duplicated_batch)>1: # the last batch
+            yield self.duplicated_batch
         raise StopIteration
