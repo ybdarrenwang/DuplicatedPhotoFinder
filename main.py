@@ -15,25 +15,24 @@ root.title("Find Duplicated Photos")
 
 Tkinter.Grid.columnconfigure(root, 0, weight=0)
 Tkinter.Grid.columnconfigure(root, 1, weight=0)
-Tkinter.Grid.columnconfigure(root, 2, weight=1)
-Tkinter.Grid.columnconfigure(root, 3, weight=0)
-Tkinter.Grid.rowconfigure(root, 0, weight=1)
+Tkinter.Grid.columnconfigure(root, 2, weight=int(DISPLAY_WIDTH/INFO_WIDTH))
+Tkinter.Grid.columnconfigure(root, 3, weight=1)
+Tkinter.Grid.rowconfigure(root, 0, weight=int(DISPLAY_HEIGHT/THUMB_HEIGHT))
 Tkinter.Grid.rowconfigure(root, 1, weight=1)
 Tkinter.Grid.rowconfigure(root, 2, weight=0)
-Tkinter.Grid.rowconfigure(root, 3, weight=0)
 
 # create frame for displaying selected photo
 selected_photo_frame = Tkinter.Frame(root, height=DISPLAY_HEIGHT, width=DISPLAY_WIDTH)
-selected_photo_frame.grid(row=0, column=0, columnspan=3, sticky=Tkinter.W+Tkinter.E)
+selected_photo_frame.grid(row=0, column=0, columnspan=3, sticky=Tkinter.E+Tkinter.W+Tkinter.N+Tkinter.S)
 
 # create frame for displaying file info
 selected_photo_info_frame = Tkinter.Frame(root, height=DISPLAY_HEIGHT, width=INFO_WIDTH, background="white")
-selected_photo_info_frame.grid(row=0, column=3)
+selected_photo_info_frame.grid(row=0, column=3, sticky=Tkinter.E+Tkinter.W+Tkinter.N+Tkinter.S)
 selected_photo_info_frame.pack_propagate(False) # by default the frame will shrink to whatever is inside of it
 
 # create background for scroll bar
 bg_frame = Tkinter.Frame(root, height=THUMB_HEIGHT)
-bg_frame.grid(row=1, column=0, columnspan=4, sticky=Tkinter.W+Tkinter.E)
+bg_frame.grid(row=1, column=0, columnspan=4, sticky=Tkinter.E+Tkinter.W+Tkinter.N+Tkinter.S)
 bg_canvas = Tkinter.Canvas(bg_frame, background='white')
 xscrollbar = Tkinter.Scrollbar(bg_frame, orient="horizontal", command=bg_canvas.xview)
 xscrollbar.pack(side=Tkinter.BOTTOM, fill="x")
@@ -49,7 +48,7 @@ batch_photo_frame.bind("<Configure>", AuxscrollFunction)
 
 # create photo database and loading progress bar
 progress_bar = ttk.Progressbar(root, orient=Tkinter.HORIZONTAL, length=PROGRESS_BAR_LENGTH, mode='determinate')
-progress_bar.grid(row=2, column=2, columnspan=2)
+progress_bar.grid(row=2, column=2, columnspan=2, sticky=Tkinter.E+Tkinter.W, padx=10)
 db = database.Database(progress_bar)
 
 # create buttons
