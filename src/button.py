@@ -74,9 +74,9 @@ class NextBatchButton(Tkinter.Button):
                 self.cv4display.append(PhotoCanvas(cp, self.batch_photo_frame, THUMB_HEIGHT-2*MARGIN, None, self.cv4display[0], self.photo_info))
             # copy pointers of all thumbs to each of them, so they can remove others' highlights when needed
             for cv in self.cv4display[1:]:
-                cv.setCompetingCanvases(self.cv4display[1:])
+                cv.setThumbCanvases(self.cv4display[1:])
             # highlight the first picture
-            self.cv4display[1].highlight()
+            self.cv4display[1].on_click()
             self.photo_info.pack()
             self.button_delete.pack()
         except StopIteration:
@@ -111,9 +111,9 @@ class DeletePhotoButton(Tkinter.Button):
         if len(self.cv4display)>1:
             # copy pointers of all thumbs to each of them, so they can remove others' highlights when needed
             for cv in self.cv4display[1:]:
-                cv.setCompetingCanvases(self.cv4display[1:])
+                cv.setThumbCanvases(self.cv4display[1:])
             # highlight the first picture
-            self.cv4display[1].highlight()
+            self.cv4display[1].on_click()
         else: # entire batch deleted
             self.cv4display[0].destroy()
             del self.cv4display[0]
