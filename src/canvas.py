@@ -24,18 +24,21 @@ class PhotoCanvas(Tkinter.Canvas):
     """
     def __init__(self, photo, parent, max_height=None, max_width=None, display_canvas=None, info_label=None):
         Tkinter.Canvas.__init__(self, parent, width=max_width, height=max_height, highlightthickness=2, relief='ridge', background='white')
+
         self.photo = photo
         self.info_label = info_label
         self.max_height = max_height
         self.max_width = max_width
         self.cache_tkinter_canvas = [None]
         self.cache_python_image = [None]
+
         self.default_color = self.cget("bg")
         self.thumb_canvases = []
         self.display_canvas = display_canvas
         if self.display_canvas==None: # display canvas: resize upon main window resize
-            self.bind("<Configure>", self.on_resize)
-            self.pack(fill=Tkinter.BOTH, expand=True)
+            #self.bind("<Configure>", self.on_resize)
+            #self.pack(fill=Tkinter.BOTH, expand=True)
+            self.pack()
         else: # thumb canvases: highlight upon click
             self.bind("<Button-1>", lambda event: self.on_click())
             self.pack(side=Tkinter.LEFT)

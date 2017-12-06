@@ -16,19 +16,19 @@ root.title("Find Duplicated Photos")
 Tkinter.Grid.columnconfigure(root, 0, weight=0)
 Tkinter.Grid.columnconfigure(root, 1, weight=0)
 Tkinter.Grid.columnconfigure(root, 2, weight=int(DISPLAY_WIDTH/INFO_WIDTH))
-Tkinter.Grid.columnconfigure(root, 3, weight=1)
+Tkinter.Grid.columnconfigure(root, 3, weight=0)
 Tkinter.Grid.rowconfigure(root, 0, weight=int(DISPLAY_HEIGHT/THUMB_HEIGHT))
-Tkinter.Grid.rowconfigure(root, 1, weight=1)
+Tkinter.Grid.rowconfigure(root, 1, weight=0)
 Tkinter.Grid.rowconfigure(root, 2, weight=0)
 
 # create frame for displaying selected photo
-selected_photo_frame = Tkinter.Frame(root, height=DISPLAY_HEIGHT, width=DISPLAY_WIDTH)
-selected_photo_frame.grid(row=0, column=0, columnspan=3, sticky=Tkinter.E+Tkinter.W+Tkinter.N+Tkinter.S)
+display_photo_frame = Tkinter.Frame(root, height=DISPLAY_HEIGHT, width=DISPLAY_WIDTH)
+display_photo_frame.grid(row=0, column=0, columnspan=3)
 
 # create frame for displaying file info
-selected_photo_info_frame = Tkinter.Frame(root, height=DISPLAY_HEIGHT, width=INFO_WIDTH, background="white")
-selected_photo_info_frame.grid(row=0, column=3, sticky=Tkinter.E+Tkinter.W+Tkinter.N+Tkinter.S)
-selected_photo_info_frame.pack_propagate(False) # by default the frame will shrink to whatever is inside of it
+display_photo_info_frame = Tkinter.Frame(root, height=DISPLAY_HEIGHT, width=INFO_WIDTH, background="white")
+display_photo_info_frame.grid(row=0, column=3, sticky=Tkinter.E+Tkinter.W+Tkinter.N+Tkinter.S)
+display_photo_info_frame.pack_propagate(False) # by default the frame will shrink to whatever is inside of it
 
 # create background for scroll bar
 bg_frame = Tkinter.Frame(root, height=THUMB_HEIGHT)
@@ -53,7 +53,7 @@ db = database.Database(progress_bar)
 
 # create buttons
 #button_cfg = button.ConfigButton(root, db, 2, 3)
-button_next = button.NextBatchButton(root, batch_photo_frame, selected_photo_frame, selected_photo_info_frame, db, 2, 1)
+button_next = button.NextBatchButton(root, batch_photo_frame, display_photo_frame, display_photo_info_frame, db, 2, 1)
 button_open = button.OpenFolderButton(root, batch_photo_frame, db, button_next, 2, 0)
 
 root.mainloop()
