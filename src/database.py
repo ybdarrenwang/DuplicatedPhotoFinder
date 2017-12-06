@@ -63,12 +63,15 @@ class Database:
 
     def isSimilarPhotos(self, p1, p2):
         """ 
-        1. Extract SIFT features for both photos.
-        2. Run k-means clustering over all SIFT feature points from both photos.
-        3. Collect the distribution (histogram) of feature points over different
-           clusters as its signature.
-        4. If the cosine distance between 2 histograms belows threshold, then
-           similar.
+        - If 2 pictures have same size, use L1 norm as first-pass filtering.
+        - Otherwise:
+            1. Extract SIFT feature points for both photos.
+            2. Run k-means clustering over all SIFT feature points from both
+               photos.
+            3. Collect the distribution (histogram) of feature points over
+               different clusters as its signature.
+            4. If the cosine distance between 2 histograms belows threshold,
+               then similar.
 
         # Arguments:
             p1: The 1st photo.
@@ -77,6 +80,14 @@ class Database:
         # Returns:
             True if 2 photos are similar; False otherwise.
         """
+        # 1st pass: L1 norm
+        if p1.shape==p2.shape:
+            dist_l1 = cv2.norm(p1.img, p2.img, cv2.NORM_L1)/p1.size
+            dist = cv2.norm(p1.img, p2.img, cv2.NORM_L2)
+            dist_l2 = math.sqrt(dist*dist/p1.size)
+            #print "%f, %f, %f" % (dist_l1, dist, dist_l2)
+            #if dist<L1_THRESH: return True
+        # 2nd pass: SIFT + K-means
         if p1.feature is None:
             gray = cv2.cvtColor(p1.img, cv2.COLOR_BGR2GRAY)
             keypoint, p1.feature = self.sift.detectAndCompute(gray, None)
