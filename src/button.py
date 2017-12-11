@@ -117,7 +117,6 @@ class DeletePhotoButton(Tkinter.Button):
         else: # entire batch deleted
             self.cv4display[0].destroy()
             del self.cv4display[0]
-            del self.db.duplicated_batch[0]
 
 """
 class ConfigButton(Tkinter.Button):

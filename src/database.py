@@ -83,10 +83,10 @@ class Database:
         # 1st pass: L1 norm
         if p1.shape==p2.shape:
             dist_l1 = cv2.norm(p1.img, p2.img, cv2.NORM_L1)/p1.size
-            dist = cv2.norm(p1.img, p2.img, cv2.NORM_L2)
-            dist_l2 = math.sqrt(dist*dist/p1.size)
-            #print "%f, %f, %f" % (dist_l1, dist, dist_l2)
-            #if dist<L1_THRESH: return True
+            if dist_l1 < L1_SAME_PHOTO_THRESH:
+                return True
+            if dist_l1 > L1_DIFFERENT_PHOTO_THRESH:
+                return False
         # 2nd pass: SIFT + K-means
         if p1.feature is None:
             gray = cv2.cvtColor(p1.img, cv2.COLOR_BGR2GRAY)
